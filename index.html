@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>수강신청 로드맵: 2025 입학생 경기여고 </title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+<!-- 폰트: 본문/UI = Pretendard, 디스플레이 제목 = Nanum Myeongjo -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+<!-- 화면 캡처 → PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+  /* ===== 디자인 토큰 ===== */
+  :root{
+    --ink:#1c2b46;          /* 본문/제목 잉크 네이비 */
+    --ink-soft:#54627c;     /* 보조 텍스트 */
+    --paper:#faf8f2;        /* 따뜻한 종이 배경 */
+    --paper-2:#f2eee2;      /* 카드 안쪽 */
+    --line:#ddd7c8;         /* 얇은 괘선 */
+    --line-strong:#bcb4a0;  /* 강한 괘선 */
+
+    --sel:#1f6f6b;          /* 선택됨(틸) */
+    --sel-bg:#e2efee;
+    --alert:#b3261e;        /* 미충족(붉은색) */
+    --alert-bg:#fbe9e7;
+    --ok:#1f7a4d;           /* 충족(녹색) */
+    --ok-bg:#e6f3ec;
+    --warn:#b07a1e;         /* 부족/초과(앰버) */
+    --warn-bg:#f6efe0;
+
+    /* 과목 유형별 색 */
+    --t-ilban:#6b7280;      /* ■ 일반선택 */
+    --t-jinro:#1f6f6b;      /* ● 진로선택 */
+    --t-yunghap:#b07a1e;    /* ▲ 융합선택 */
+    --t-sayung:#7a5ea8;     /* △ 사회·과학 융합선택 */
+
+    --font-disp:"Nanum Myeongjo", "Apple SD Gothic Neo", serif;
+    --font-body:"Pretendard","Pretendard Variable","Apple SD Gothic Neo",system-ui,sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    font-family:var(--font-body);
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 50% -10%, #fffefb 0%, var(--paper) 55%);
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{ max-width:1360px; margin:0 auto; padding:28px 22px 80px; }
+
+  /* ===== 헤더 ===== */
+  .masthead{
+    border-bottom:2.5px solid var(--ink);
+    padding-bottom:14px; margin-bottom:8px;
+    display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .masthead .eyebrow{
+    font-size:12.5px; letter-spacing:.14em; color:var(--ink-soft);
+    font-weight:600; text-transform:none; margin-bottom:6px;
+  }
+  /* PDF 미니 버튼 */
+  .pdf-mini{
+    display:inline-flex; align-items:center; gap:4px;
+    font-family:var(--font-body); font-size:12px; font-weight:700; letter-spacing:0;
+    color:var(--ink); background:#fff;
+    border:1.4px solid var(--line-strong); border-radius:7px;
+    padding:3px 9px; cursor:pointer; white-space:nowrap;
+    transition:background .12s, border-color .12s;
+  }
+  .pdf-mini:hover{ background:var(--paper-2); border-color:var(--ink-soft); }
+  .pdf-mini svg{ display:block; }
+  .masthead h1{
+    font-family:var(--font-disp); font-weight:800;
+    font-size:clamp(26px,3.4vw,40px); margin:0; letter-spacing:-.01em;
+  }
+  .masthead h1 .yr{ color:var(--sel); }
+  .ident{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); }
+  .ident label{ font-weight:700; color:var(--ink); font-size:14px; }
+  .ident input{
+    font-family:var(--font-body); font-size:15px; font-weight:600; color:var(--ink);
+    border:none; border-bottom:2px solid var(--line-strong);
+    background:transparent; padding:3px 6px;
+  }
+  .ident input#loginSid{ width:72px; }
+  .ident input#loginName{ width:88px; }
+  .ident input#loginPw{ width:88px; letter-spacing:.1em; }
+  .ident input:focus{ outline:none; border-bottom-color:var(--sel); }
+  /* 로그인 버튼 */
+  .login-btn{
+    font-family:var(--font-body); font-size:13px; font-weight:700;
+    border:1.5px solid var(--ink); border-radius:7px;
+    background:var(--ink); color:#fff;
+    padding:5px 13px; cursor:pointer; white-space:nowrap;
+    transition:opacity .12s;
+  }
+  .login-btn:hover{ opacity:.85; }
+  .login-btn.ghost{ background:#fff; color:var(--ink); }
+
+  /* 로그인 에러 메시지 */
+  .login-err{ font-size:12px; color:var(--alert); font-weight:600; margin-left:2px; }
+
+  /* 로그인 후 상태 표시 */
+  .user-info{
+    display:none; align-items:center; gap:10px;
+    font-size:15px; font-weight:700; color:var(--ink);
+  }
+  .user-info .greeting{ font-size:13px; color:var(--ink-soft); font-weight:500; }
+  .user-info .user-date{ font-size:13px; color:var(--ink-soft); font-weight:700; white-space:nowrap; }
+  .user-info.on{ display:flex; }
+
+  /* 로그인 폼: 항상 표시 (모바일·데스크톱 공통) */
+  .login-form-wrap{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  /* label+input을 한 단위로 묶어 줄바꿈 시 세트째로 내려가게 */
+  .login-field{ display:inline-flex; align-items:center; gap:6px; flex:0 0 auto; white-space:nowrap; }
+  /* 구분자(|)는 줄바꿈 시 자연스럽게 처리 */
+  .ident .sep{ color:var(--line-strong); font-size:18px; font-weight:300; flex:0 0 auto; }
+
+  /* 로그인 모달 (모바일) */
+  .login-modal{ position:fixed; inset:0; z-index:80; display:none; place-items:center; }
+  .login-modal.on{ display:grid; }
+  .login-modal .lm-back{ position:absolute; inset:0; background:rgba(20,28,46,.55); backdrop-filter:blur(2px); }
+  .login-modal .lm-panel{
+    position:relative; z-index:1; background:#fff; border-radius:16px;
+    padding:28px 24px; width:min(340px,92vw);
+    box-shadow:0 24px 60px -20px rgba(28,43,70,.6);
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .login-modal .lm-title{ font-family:var(--font-disp); font-size:20px; font-weight:800; color:var(--ink); }
+  .login-modal .lm-row{ display:flex; flex-direction:column; gap:5px; }
+  .login-modal .lm-row label{ font-size:13px; font-weight:700; color:var(--ink); }
+  .login-modal .lm-row input{
+    font-family:var(--font-body); font-size:16px; color:var(--ink);
+    border:none; border-bottom:2px solid var(--line-strong);
+    background:transparent; padding:5px 4px; outline:none; width:100%;
+  }
+  .login-modal .lm-row input:focus{ border-bottom-color:var(--sel); }
+  .login-modal .lm-err{ font-size:12.5px; color:var(--alert); font-weight:600; min-height:18px; }
+  .login-modal .lm-submit{
+    font-family:var(--font-body); font-size:15px; font-weight:800;
+    background:var(--ink); color:#fff; border:none; border-radius:10px;
+    padding:12px; cursor:pointer; margin-top:4px;
+  }
+  .login-modal .lm-submit:hover{ opacity:.88; }
+  .login-modal .lm-x{
+    position:absolute; top:14px; right:16px;
+    background:none; border:none; font-size:18px; cursor:pointer; color:var(--ink-soft);
+  }
+
+  /* 규칙 요약 + 범례 */
+  .ribbon{
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; margin:4px 0 4px; padding:0;
+    background:transparent; border:none; border-radius:0;
+  }
+  .rules{ font-size:13px; color:var(--ink-soft); display:flex; gap:18px; flex-wrap:wrap; }
+  .rules b{ color:var(--ink); font-weight:700; }
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; }
+  .legend span{ display:inline-flex; align-items:center; gap:5px; color:var(--ink-soft); }
+  .legend .mk{ font-weight:800; font-size:13px; }
+  .mk.ilban{ color:var(--t-ilban); }
+  .mk.jinro{ color:var(--t-jinro); }
+  .mk.yunghap{ color:var(--t-yunghap); }
+  .mk.sayung{ color:var(--t-sayung); }
+
+  /* ===== 본문 레이아웃: 펼침면 + 패널 ===== */
+  .layout{ display:flex; gap:20px; align-items:flex-start; }
+
+  /* 펼침면: 학기 4단을 한 줄로 */
+  .spread{
+    flex:1 1 auto; min-width:0;
+    display:flex; align-items:stretch;
+    background:#fff;
+    border:1px solid var(--line-strong);
+    border-radius:12px;
+    box-shadow:0 18px 40px -28px rgba(28,43,70,.5);
+    overflow:visible;            /* 헤더 sticky가 화면에 고정되도록 (hidden 금지) */
+  }
+  .spread.scroll{ overflow-x:auto; }
+
+  /* overflow를 없앤 대신 바깥 네 모서리만 라운딩 */
+  .col:first-child{ border-bottom-left-radius:11px; }
+  .col:last-child{ border-bottom-right-radius:11px; }
+  .col:first-child .col-head{ border-top-left-radius:11px; }
+  .col:last-child .col-head{ border-top-right-radius:11px; }
+
+  .col{
+    flex:1 1 0; min-width:228px;
+    border-right:1px solid var(--line);
+    display:flex; flex-direction:column;
+    background:linear-gradient(#fff, #fffdf8);
+  }
+  .col:last-child{ border-right:none; }
+
+  /* 책등(spine): 2학년 면 | 3학년 면 사이 접힘 */
+  .spine{
+    flex:0 0 22px; align-self:stretch;
+    background:
+      linear-gradient(90deg,
+        rgba(0,0,0,.10), rgba(0,0,0,.02) 28%,
+        rgba(255,255,255,0) 50%,
+        rgba(0,0,0,.02) 72%, rgba(0,0,0,.10));
+    border-left:1px solid var(--line-strong);
+    border-right:1px solid var(--line-strong);
+    position:relative;
+  }
+  .spine::after{
+    content:""; position:absolute; inset:0 9px;
+    border-left:1px dashed rgba(28,43,70,.18);
+  }
+
+  .col-head{
+    position:sticky; top:0; z-index:2;
+    background:var(--ink); color:#fff;
+    padding:9px 14px 10px;
+    text-align:center;
+    box-shadow:0 6px 10px -6px rgba(28,43,70,.45);
+  }
+  /* 학기명 + 택N · 0/N 한 줄 */
+  .col-head .head-row{
+    display:inline-flex; align-items:center; gap:8px; flex-wrap:nowrap;
+  }
+  .sem-reset{
+    position:absolute; top:8px; right:8px;
+    font-family:var(--font-body); font-size:10px; font-weight:700;
+    color:#cdd6e6; background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.28); border-radius:6px;
+    padding:2px 7px; cursor:pointer; line-height:1.5;
+    transition:background .12s, color .12s;
+  }
+  .sem-reset:hover{ background:rgba(255,255,255,.24); color:#fff; }
+  .sem-reset:active{ transform:translateY(1px); }
+  .col-head .gterm{
+    font-family:var(--font-disp); font-weight:800;
+    font-size:17px; letter-spacing:.01em; white-space:nowrap;
+  }
+  .col-head .pick{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12px; color:#cdd6e6; white-space:nowrap;
+  }
+  .col-head .count{
+    font-variant-numeric:tabular-nums; font-weight:800; font-size:13px;
+    padding:2px 10px; border-radius:999px;
+    background:var(--alert); color:#fff;            /* 기본(미완료) = 붉은색 */
+    transition:background .2s;
+  }
+  .col-head .count.ok{ background:var(--ok); }       /* 정원 채움 = 초록색 */
+  .col-head .count.bad{ background:var(--alert); }
+  .col-head .count.over{ background:var(--alert); }
+
+  /* 학교 지정 과목 — 헤더 안 한 줄 텍스트 */
+  .fixed-inline{
+    margin-top:5px; font-size:10.5px; color:rgba(255,255,255,.62);
+    letter-spacing:.01em; line-height:1.4;
+  }
+  .fixed-inline b{ color:#fff; font-weight:800; }
+
+  .group{ padding:6px 12px 0; }
+  .group + .group{ border-top:1px solid var(--line); margin-top:6px; padding-top:8px; }
+  .group .gname{
+    font-size:11.5px; font-weight:700; color:var(--ink-soft);
+    letter-spacing:.04em; margin:2px 0 6px;
+  }
+
+  /* 과목 행: ⓘ + 과목 버튼 */
+  .course-row{ display:flex; align-items:stretch; gap:5px; margin-bottom:6px; position:relative; }
+  .info-ic{
+    flex:0 0 auto; align-self:center;
+    width:17px; height:17px; padding:0; cursor:pointer;
+    border:1.4px solid var(--ink-soft); border-radius:50%;
+    background:#fff; color:var(--ink-soft);
+    font-family:Georgia,"Times New Roman",serif; font-style:italic;
+    font-weight:700; font-size:11px; line-height:1;
+    display:grid; place-items:center;
+    transition:background .12s, color .12s, border-color .12s;
+  }
+  .info-ic:hover{ background:var(--ink); color:#fff; border-color:var(--ink); }
+  .info-ic:focus-visible{ outline:2px solid var(--sel); outline-offset:2px; }
+  .info-sp{ flex:0 0 auto; width:17px; }
+
+  /* 과목 버튼 */
+  .course{
+    flex:1 1 auto; min-width:0; text-align:left; cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    font-family:var(--font-body); font-size:13.5px; color:var(--ink);
+    background:#fff; border:1.4px solid var(--line);
+    border-radius:8px; padding:8px 10px;
+    transition:border-color .12s, background .12s, transform .06s;
+  }
+  .course:hover{ border-color:var(--line-strong); }
+  .course:active{ transform:scale(.99); }
+  .course:focus-visible{ outline:2.5px solid var(--sel); outline-offset:2px; }
+  .course:disabled{
+    opacity:.42; cursor:not-allowed; filter:grayscale(.35);
+    background:#f6f5f1; box-shadow:none;
+  }
+  .course:disabled:hover{ border-color:var(--line); }
+  .course .mk{ font-weight:800; font-size:12px; flex:0 0 auto; }
+  .course .nm{ flex:1 1 auto; }
+  .course .box{
+    flex:0 0 auto; width:17px; height:17px; border-radius:5px;
+    border:1.6px solid var(--line-strong); display:grid; place-items:center;
+    font-size:12px; color:#fff; background:#fff;
+  }
+  .course[aria-pressed="true"]{
+    border-color:var(--sel); background:var(--sel-bg);
+    box-shadow:inset 3px 0 0 var(--sel);
+    font-weight:600;
+  }
+  .course[aria-pressed="true"] .box{ background:var(--sel); border-color:var(--sel); }
+
+  /* 제외(✕) 버튼 */
+  .excl-btn{
+    flex:0 0 auto; align-self:center;
+    width:18px; height:18px; padding:0; cursor:pointer;
+    border:none; border-radius:5px;
+    background:transparent; color:var(--ink-soft);
+    font-size:11px; line-height:1; display:grid; place-items:center;
+    opacity:.45; transition:opacity .12s, background .12s, color .12s;
+  }
+  .excl-btn:hover{ opacity:1; background:var(--alert-bg); color:var(--alert); }
+  .course-row.is-excluded{ display:none; }   /* 제외된 과목은 리스트에서 완전히 숨김 */
+
+  /* 하단 "제외한 과목" 박스 */
+  .excluded-box{
+    margin:18px 0 4px; padding:12px 16px;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:10px;
+  }
+  .excluded-box[hidden]{ display:none; }
+  .excluded-box .eb-title{
+    font-size:13px; font-weight:800; color:var(--ink); margin-bottom:8px;
+    letter-spacing:.02em;
+  }
+  .eb-rows{ display:flex; flex-direction:column; gap:7px; }
+  .eb-row{ display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap; }
+  .eb-sem{ flex:0 0 88px; font-size:12.5px; font-weight:800; color:var(--ink); padding-top:3px; }
+  .eb-chips{ display:flex; gap:6px; flex-wrap:wrap; flex:1 1 auto; }
+  .eb-chip{
+    display:inline-flex; align-items:center; gap:6px;
+    background:#fff; border:1px solid var(--line-strong); border-radius:999px;
+    padding:2px 5px 2px 11px; font-size:12px; color:var(--ink);
+  }
+  .eb-restore{
+    border:none; border-radius:999px; cursor:pointer;
+    background:var(--sel); color:#fff; font-size:11px; font-weight:700;
+    padding:2px 9px; transition:opacity .12s;
+  }
+  .eb-restore:hover{ opacity:.85; }
+
+  /* ===== 충족여부 패널 (붉은색 섹션) ===== */
+  .panel{
+    flex:0 0 234px; align-self:flex-start;
+    position:sticky; top:18px;
+    background:#fff; border:2px solid var(--alert); border-radius:12px;
+    overflow:hidden; box-shadow:0 18px 40px -30px rgba(179,38,30,.7);
+  }
+  .panel.done{ border-color:var(--ok); box-shadow:0 18px 40px -30px rgba(31,122,77,.6); }
+  .panel-head{
+    background:var(--alert); color:#fff; padding:9px 13px;
+    transition:background .2s;
+  }
+  .panel.done .panel-head{ background:var(--ok); }
+  .panel-head .ph-t{ font-weight:800; font-size:14px; letter-spacing:.01em; }
+  .panel-head .ph-s{ font-size:11px; opacity:.92; margin-top:2px; line-height:1.3; }
+
+  .panel-body{ padding:8px 10px 10px; }
+  .sec-label{
+    font-size:10px; font-weight:700; letter-spacing:.05em; color:var(--ink-soft);
+    margin:8px 2px 4px; text-transform:none;
+  }
+  .sec-label:first-child{ margin-top:1px; }
+
+  .chk{
+    display:flex; align-items:center; gap:7px;
+    padding:4px 8px; border-radius:8px; margin-bottom:4px;
+    border:1px solid var(--line); background:#fff;
+    transition:background .15s, border-color .15s;
+  }
+  .chk .ico{
+    flex:0 0 auto; width:16px; height:16px; border-radius:50%;
+    display:grid; place-items:center; font-size:10.5px; font-weight:800; color:#fff;
+  }
+  .chk .label{ flex:1 1 auto; font-size:12px; line-height:1.25; color:var(--ink); }
+  .chk .val{ flex:0 0 auto; font-variant-numeric:tabular-nums; font-weight:800; font-size:12.5px; }
+
+  .chk.s-ok{ background:var(--ok-bg); border-color:#bfe2cd; }
+  .chk.s-ok .ico{ background:var(--ok); }
+  .chk.s-ok .val{ color:var(--ok); }
+  .chk.s-bad{ background:var(--alert-bg); border-color:#f2c9c4; }
+  .chk.s-bad .ico{ background:var(--alert); }
+  .chk.s-bad .val{ color:var(--alert); }
+  .chk.s-warn{ background:var(--warn-bg); border-color:#e6d4ab; }
+  .chk.s-warn .ico{ background:var(--warn); }
+  .chk.s-warn .val{ color:var(--warn); }
+  .chk.s-info{ background:#f6f5f1; }
+  .chk.s-info .ico{ background:#9aa3b2; }
+  .chk.s-info .val{ color:var(--ink-soft); }
+
+  /* ===== 하단/플로팅 액션 ===== */
+  .toolbar{
+    position:fixed; right:22px; bottom:80px; z-index:30;
+    display:flex; gap:10px;
+  }
+  .btn{
+    font-family:var(--font-body); font-size:14px; font-weight:700;
+    border:none; border-radius:10px; padding:12px 18px; cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    box-shadow:0 10px 24px -10px rgba(28,43,70,.55);
+    transition:transform .08s, opacity .15s;
+    white-space: nowrap; /* 기본적으로 줄바꿈 방지 */
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--ink); color:#fff; }
+  .btn-save{ background:var(--sel); color:#fff; }
+  .btn-ghost{ background:#fff; color:var(--ink); border:1.5px solid var(--line-strong); }
+  .btn:disabled{ opacity:.55; cursor:default; }
+
+  /* 데스크톱/모바일 텍스트 분기 */
+  .m-txt { display: none; }
+  .d-txt { display: inline; }
+
+  .note{
+    margin:10px 0 0; font-size:13px; color:var(--ink-soft);
+    background:var(--paper-2); border:1px solid var(--line);
+    border-radius:8px; padding:9px 14px; line-height:1.7;
+  }
+  .note b{ color:var(--ink); }
+
+  /* ===== 캡처 중 임시 스타일 ===== */
+  body.capturing .no-print{ display:none !important; }
+  body.capturing .info-sp{ display:none !important; }
+  body.capturing .col-head{ position:static !important; }
+  body.capturing .spread{ overflow:visible !important; }
+  body.capturing .col-head{
+    background:#fff !important; color:var(--ink) !important;
+    border-bottom:1.5px solid var(--line-strong); box-shadow:none !important;
+  }
+  body.capturing .col-head .gterm{ color:var(--ink) !important; }
+  body.capturing .col-head .pick{ color:var(--ink-soft) !important; }
+
+  body.capturing .ribbon{ display:none !important; }
+
+  body.capturing .layout{ flex-direction:row !important; gap:0 !important; }
+  body.capturing .spread{
+    display:flex !important; grid-template-columns:none !important;
+    gap:0 !important; width:auto !important;
+    background:#fff !important; border:1px solid var(--line-strong) !important;
+    border-radius:12px !important; box-shadow:none !important;
+  }
+  body.capturing .spine{ display:block !important; }
+  body.capturing .col{
+    min-width:228px !important; border:0 !important;
+    border-right:1px solid var(--line) !important;
+    border-radius:0 !important; box-shadow:none !important; overflow:visible !important;
+  }
+  body.capturing .col:last-child{ border-right:0 !important; }
+
+  /* ===== PDF 전용: 교과군 필수요건 요약 ===== */
+  .print-only{ display:none; }
+  body.capturing .print-only{ display:flex; }
+  #printSummary{
+    align-items:center; gap:14px; margin:8px 0 16px;
+    padding:9px 15px; border:1.5px solid var(--line-strong); border-radius:9px;
+    background:#fff; flex-wrap:wrap;
+  }
+  #printSummary .ps-title{ font-weight:800; font-size:13px; color:var(--ink); }
+  #printSummary .ps-items{ display:flex; gap:9px; flex-wrap:wrap; }
+  #printSummary .ps-item{
+    font-weight:700; font-size:12.5px; padding:3px 11px;
+    border-radius:999px; border:1.5px solid;
+  }
+  #printSummary .ps-item.ok{ color:var(--ok); border-color:var(--ok); background:var(--ok-bg); }
+  #printSummary .ps-item.bad{ color:var(--alert); border-color:var(--alert); background:var(--alert-bg); }
+
+  /* ===== 하단 고정 미니바 (교과군 필수요건) ===== */
+  .statusbar{
+    display:flex; position:fixed; left:0; right:0; bottom:0; z-index:40;
+    gap:10px; padding:9px 14px 11px; justify-content:center; align-items:center;
+    background:rgba(255,255,255,.96); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    border-top:2.5px solid var(--alert);
+    box-shadow:0 -12px 26px -18px rgba(28,43,70,.5);
+  }
+  .statusbar.done{ border-top-color:var(--ok); }
+  .sb-chip{
+    flex:1 1 0; max-width:190px;
+    display:flex; flex-direction:column; align-items:center;
+    gap:1px; padding:4px 6px; border-radius:9px; line-height:1.2;
+    background:var(--alert-bg); color:var(--alert);
+  }
+  .sb-chip.ok{ background:var(--ok-bg); color:var(--ok); }
+  .sb-chip .v{ font-weight:800; font-size:14px; font-variant-numeric:tabular-nums; }
+  .sb-chip .l{ font-weight:600; font-size:10.5px; opacity:.9; }
+
+  /* 전역 여백: 미니바 및 툴바 가림 방지 */
+  body{ padding-bottom:74px; }
+
+  /* 모바일에서 모달 열린 상태로 뒤 화면/전체 페이지가 움직이거나 확대되는 것 방지 */
+  body.modal-open{
+    position:fixed;
+    width:100%;
+    overflow:hidden;
+    touch-action:none;
+  }
+
+  /* ===== 불러오기 모달 리스트 항목 ===== */
+  .rm-item {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 11px 14px; border: 1.4px solid var(--line); border-radius: 8px;
+    background: #fff; transition: border-color .12s, background .12s;
+  }
+  .rm-item:hover { border-color: var(--sel); background: var(--sel-bg); }
+  .rm-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .rm-name { font-size: 14px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rm-meta{ display:flex; }
+  .rm-badge{ font-size:11px; font-weight:700; padding:1px 8px; border-radius:999px; }
+  .rm-badge.ok{ background:var(--ok-bg); color:var(--ok); }
+  .rm-badge.bad{ background:var(--alert-bg); color:var(--alert); }
+  
+  .rm-actions { flex: 0 0 auto; display: flex; gap: 6px; }
+  
+  .rm-load-btn {
+    font-family: var(--font-body); font-size: 12.5px; font-weight: 700;
+    color: var(--sel); background: transparent; border: 1.5px solid var(--sel); border-radius: 6px;
+    padding: 4px 10px; cursor: pointer; transition: background .12s, color .12s;
+  }
+  .rm-load-btn:hover:not(:disabled) { background: var(--sel); color: #fff; }
+  
+  .rm-del-btn {
+    font-family: var(--font-body); font-size: 12.5px; font-weight: 700;
+    color: var(--alert); background: transparent; border: 1.5px solid var(--alert); border-radius: 6px;
+    padding: 4px 10px; cursor: pointer; transition: background .12s, color .12s;
+  }
+  .rm-del-btn:hover:not(:disabled) { background: var(--alert); color: #fff; }
+  .rm-load-btn:disabled, .rm-del-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .rm-empty { font-size: 13.5px; color: var(--ink-soft); text-align: center; padding: 20px 0; }
+  /* 불러오기 모달 — 제출본/임시저장본 섹션 구분 */
+  .rm-sec-title { font-size: 12px; font-weight: 800; color: var(--ink-soft); margin: 16px 2px 6px; letter-spacing: .02em; }
+  .rm-sec-title:first-child { margin-top: 0; }
+  .rm-badge.sub { background: var(--sel-bg); color: var(--sel); }
+
+  /* ===== ⓘ 팝오버 ===== */
+  .media-pop{
+    position:fixed; z-index:60; display:flex; align-items:center; gap:4px;
+    padding:3px; border-radius:8px;
+    background:var(--ink); box-shadow:0 8px 22px -8px rgba(28,43,70,.6);
+  }
+  .media-pop[hidden]{ display:none; }
+  .mp-btn{
+    width:26px; height:26px; padding:0; cursor:pointer;
+    border:none; border-radius:6px; background:#c0392b; color:#fff;
+    display:grid; place-items:center;
+    transition:transform .08s, filter .12s;
+  }
+  .mp-btn.yt{ background:#ff0000; }
+  .mp-btn:hover{ filter:brightness(1.1); }
+  .mp-btn:active{ transform:scale(.93); }
+
+/* ===== 미디어 모달  ===== */
+  .media-modal{ position:fixed; inset:0; z-index:70; display:grid; place-items:center; }
+  .media-modal[hidden]{ display:none; }
+  .mm-backdrop{ position:absolute; inset:0; background:rgba(20,28,46,.62); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px); }
+  
+  /* 모달 패널: 화면 세로 크기의 80%를 넘지 않도록 설정 */
+/* ===== 미디어 모달: 화면 높이별 제어 ===== */
+  .mm-panel {
+    position: relative; z-index: 1;
+    width: min(960px, 94vw);
+    
+    /* 기본(모바일) 높이 */
+    max-height: 85dvh; 
+    
+    display: flex; flex-direction: column;
+    background: #fff; border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,.6);
+  }
+
+  /* 화면이 커지면(680px 이상) 95vh로 확장 */
+  @media (min-width: 681px) {
+    .mm-panel {
+      max-height: 95vh;
+    }
+  }
+
+  .mm-head{
+    flex: 0 0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; padding:11px 14px; background:var(--ink); color:#fff;
+  }
+  
+  .mm-body{ 
+    flex: 1 1 auto; 
+    min-height: 0; 
+    overflow: auto; 
+    background: #33373d;
+  }
+  
+  .mm-body iframe{ 
+    width:100%; height:100%; 
+    border:none; display:block;
+    /* [핵심] iframe 자체에 스크롤 허용 */
+    overflow: auto; 
+  }
+  .mm-title{ font-weight:700; font-size:14.5px; }
+  .mm-actions{ display:flex; align-items:center; gap:12px; }
+  .mm-ext{ color:#cdd6e6; font-size:12.5px; font-weight:600; text-decoration:none; white-space:nowrap; }
+  .mm-ext:hover{ color:#fff; text-decoration:underline; }
+  .mm-x{
+    width:30px; height:30px; cursor:pointer; border:none; border-radius:8px;
+    background:rgba(255,255,255,.14); color:#fff; font-size:15px; line-height:1;
+  }
+  .mm-x:hover{ background:rgba(255,255,255,.28); }
+
+  .mm-body.yt{ background:#000; display:grid; place-items:center; }
+  .mm-body.yt iframe{ width:100%; aspect-ratio:16/9; height:auto; max-height:100%; }
+/* 유튜브 모드: 비율 유지 */
+  .mm-panel.yt-mode { width: min(960px, 94vw); height: auto; }
+  .mm-panel.yt-mode .mm-body { aspect-ratio: 4 / 3; flex: none; overflow: hidden; }
+
+  /* PDF 모드: A4 비율 유지 */
+  .mm-panel.pdf-mode { width: min(700px, 94vw); }
+  .mm-panel.pdf-mode .mm-body { aspect-ratio: 1 / 1.414; flex: none; }
+
+  /* ===== 관리자 패널 ===== */
+  .admin-panel{ display:none; margin-top:8px; }
+  body.admin-mode .layout,
+  body.admin-mode .ribbon,
+  body.admin-mode .note,
+  body.admin-mode .toolbar,
+  body.admin-mode #statusbar,
+  body.admin-mode #excludedBox,
+  body.admin-mode #printSummary,
+  body.admin-mode #pdfMiniBtn{ display:none !important; }
+  body.admin-mode .admin-panel{ display:block; }
+  body.admin-mode{ padding-bottom:24px; }
+
+  .admin-tabs{ display:flex; gap:6px; border-bottom:2px solid var(--line-strong); margin-bottom:16px; }
+  .atab{
+    font-family:var(--font-body); font-size:14px; font-weight:700; cursor:pointer;
+    background:transparent; border:none; color:var(--ink-soft);
+    padding:9px 16px; border-bottom:3px solid transparent; margin-bottom:-2px;
+  }
+  .atab.on{ color:var(--ink); border-bottom-color:var(--ink); }
+  .atab-panel[hidden]{ display:none; }
+
+  .ap-controls{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+  .ap-controls label{ font-size:13px; font-weight:700; color:var(--ink); }
+  .ap-controls select{
+    font-family:var(--font-body); font-size:14px; color:var(--ink);
+    border:1.4px solid var(--line-strong); border-radius:7px; padding:6px 10px; background:#fff; cursor:pointer;
+  }
+  .ap-fixed{ font-size:14px; font-weight:800; color:var(--ink); }
+  .btn-mini{
+    font-family:var(--font-body); font-size:13px; font-weight:700; cursor:pointer;
+    border:1.4px solid var(--line-strong); border-radius:7px; background:#fff; color:var(--ink);
+    padding:7px 13px; transition:background .12s;
+  }
+  .btn-mini:hover{ background:var(--paper-2); }
+  .btn-mini.primary{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .ov-stats{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+  .ov-card{
+    flex:1 1 120px; background:#fff; border:1.5px solid var(--line); border-radius:10px;
+    padding:12px 16px; text-align:center;
+  }
+  .ov-card .n{ font-size:26px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .ov-card .t{ font-size:12px; color:var(--ink-soft); font-weight:600; margin-top:2px; }
+  .ov-card.sub .n{ color:var(--ok); }
+  .ov-card.no .n{ color:var(--alert); }
+
+  .ov-courses{ display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:7px; }
+  .ovc-item{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:#fff; border:1px solid var(--line); border-radius:8px; padding:7px 12px;
+  }
+  .ovc-item .nm{ font-size:13px; color:var(--ink); }
+  .ovc-item .cnt{ font-size:14px; font-weight:800; color:var(--sel); font-variant-numeric:tabular-nums; }
+  .ovc-item.zero .cnt{ color:var(--line-strong); }
+
+  .ap-legend{ display:flex; align-items:center; gap:4px; font-size:12px; color:var(--ink-soft); margin-left:auto; flex-wrap:wrap; }
+  .cs-dot{ width:11px; height:11px; border-radius:50%; display:inline-block; margin-left:6px; }
+  .cs-dot.complete{ background:var(--ok); }
+  .cs-dot.draft{ background:var(--warn); }
+  .cs-dot.none{ background:#c9cdd5; }
+  .cls-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+  .cs-item{
+    display:flex; align-items:center; gap:9px;
+    background:#fff; border:1.5px solid var(--line); border-radius:9px; padding:9px 12px;
+    text-align:left; font-family:var(--font-body);
+  }
+  .cs-item.clickable{ cursor:pointer; transition:border-color .12s, background .12s; }
+  .cs-item.clickable:hover{ border-color:var(--sel); background:var(--sel-bg); }
+  .cs-item .dot{ flex:0 0 auto; width:12px; height:12px; border-radius:50%; }
+  .cs-item.complete .dot{ background:var(--ok); }
+  .cs-item.draft .dot{ background:var(--warn); }
+  .cs-item.none .dot{ background:#c9cdd5; }
+  .cs-item .who{ flex:1 1 auto; min-width:0; }
+  .cs-item .who .sid{ font-size:11px; color:var(--ink-soft); font-variant-numeric:tabular-nums; }
+  .cs-item .who .nm{ font-size:13.5px; font-weight:700; color:var(--ink); }
+
+  .stu-sem{ margin-bottom:14px; }
+  .stu-sem h4{ margin:0 0 6px; font-size:14px; color:var(--ink); border-bottom:1px solid var(--line); padding-bottom:4px; }
+  .stu-sem .courses{ display:flex; flex-wrap:wrap; gap:6px; }
+  .stu-sem .c{ font-size:12.5px; background:var(--sel-bg); color:var(--sel); border-radius:6px; padding:3px 9px; font-weight:600; }
+  .stu-meta{ font-size:12.5px; color:var(--ink-soft); margin-bottom:12px; }
+
+  /* 중복 이름 옵션 버튼 */
+  .dupe-opt{
+    font-family:var(--font-body); font-size:14px; font-weight:700; cursor:pointer;
+    border:none; border-radius:9px; padding:12px; width:100%;
+    background:var(--ink); color:#fff; transition:opacity .12s;
+  }
+  .dupe-opt:hover{ opacity:.88; }
+  .dupe-opt.secondary{ background:var(--paper-2); color:var(--ink); border:1.5px solid var(--line-strong); }
+  .dupe-opt.cancel{ background:transparent; color:var(--ink-soft); font-weight:600; }
+
+
+  /* ===== 반응형 ===== */
+  @media (max-width: 960px){
+    body { padding-bottom: 140px; } /* 플로팅 툴바 가림 방지 */
+    
+    .layout{ flex-direction:column; gap:16px; }
+    .spread{
+      order:1; width:100%;
+      display:grid; grid-template-columns:1fr 1fr; gap:14px;
+      background:transparent; border:none; box-shadow:none; overflow:visible;
+    }
+    .spread.scroll{ overflow:visible; }
+    .spine{ display:none; }
+    
+    .col{
+      min-width:0;
+      border:1px solid var(--line-strong); border-radius:12px; 
+      overflow:visible;
+      box-shadow:0 12px 30px -24px rgba(28,43,70,.45);
+    }
+    
+    .col-head{ 
+      position: sticky; top: 0; z-index: 10;
+      border-top-left-radius: 11px; border-top-right-radius: 11px; 
+      box-shadow: 0 6px 12px -4px rgba(28,43,70,.3);
+    }        
+    
+    /* 화면 하단 고정 투명 플로팅 바 (배경 제거) */
+    .toolbar {
+      position: fixed; left: 0; right: 0; bottom: 74px; /* 상태바 바로 위로 띄움 */
+      max-width: none; margin: 0;
+      justify-content: center; gap: 12px;
+      padding: 0 22px; z-index: 35;
+      
+      /* 하얀색 배경 및 테두리 효과 모두 제거 */
+      background: transparent;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      border-top: none;
+      box-shadow: none;
+      
+      /* 버튼 사이 빈 공간을 터치하면 뒤에 있는 과목이 눌리도록 투과 설정 */
+      pointer-events: none; 
+    }
+    
+    .toolbar .btn { 
+      flex: 1 1 0; max-width: 240px; justify-content: center; padding: 14px 18px; 
+      pointer-events: auto; /* 버튼 자체는 클릭 가능하게 복구 */
+    }
+  }
+
+  @media (max-width: 680px){
+    .masthead { flex-wrap: wrap; gap: 8px; }
+    .masthead > div:first-child { flex: 1 1 100%; min-width: 0; }
+
+    /* 모바일에서도 로그인 폼을 한 줄로 압축 */
+    .masthead .ident{
+      flex:1 1 100%;
+      min-width:0;
+      position:relative;
+    }
+    .login-form-wrap{
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:nowrap;
+      gap:clamp(4px, 1.3vw, 8px);
+      overflow:visible;
+    }
+    .login-field{
+      flex:0 1 auto;
+      min-width:0;
+      gap:clamp(3px, .9vw, 6px);
+    }
+    .ident label{
+      flex:0 0 auto;
+      font-size:clamp(12px, 3.1vw, 14px);
+      letter-spacing:-.035em;
+    }
+    .ident input{
+      min-width:0;
+      font-size:clamp(14px, 3.6vw, 16px);
+      padding:3px 3px;
+      border-bottom-width:1.5px;
+    }
+    .ident input#loginSid{
+      width:clamp(7ch, 15vw, 8.5ch);      /* 5자리 학번 + 여유 2칸, 화면 여유 시 약간 확장 */
+      flex:0 1 clamp(7ch, 15vw, 8.5ch);
+    }
+    .ident input#loginName{
+      width:clamp(5em, 20vw, 6em);        /* 한글 3글자 이름 + 여유 2글자, 화면 여유 시 약간 확장 */
+      flex:0 1 clamp(5em, 20vw, 6em);
+    }
+    .ident input#loginPw{
+      width:clamp(8ch, 18vw, 9.5ch);      /* 숫자/문자 8칸 기준, 화면 여유 시 약간 확장 */
+      flex:0 1 clamp(8ch, 18vw, 9.5ch);
+    }
+    .ident .sep{ display:none; }
+    .login-btn{
+      flex:0 0 auto;
+      font-size:clamp(13px, 3.4vw, 14px);
+      padding:5px clamp(8px, 2.4vw, 12px);
+      border-radius:7px;
+    }
+    .login-err{
+      position:absolute;
+      left:0;
+      top:100%;
+      margin:3px 0 0;
+      font-size:11px;
+      line-height:1.2;
+      white-space:nowrap;
+    }
+    .user-info{
+      width:100%;
+      min-width:0;
+      flex-wrap:nowrap;
+    }
+    #userGreeting{
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    
+    .spread{ grid-template-columns:1fr; }
+    .mm-panel{ width:100vw; height:100dvh; max-height:100dvh; border-radius:0; }
+
+    /* 모바일 PDF 모달: A4 비율 고정 해제 → 헤더 제외 남은 높이를 iframe이 꽉 채움 */
+    #mediaModal .mm-panel.pdf-mode{
+      width:100vw;
+      height:100dvh;
+      max-height:100dvh;
+      border-radius:0;
+    }
+    #mediaModal .mm-panel.pdf-mode .mm-body{
+      flex:1 1 auto;
+      min-height:0;
+      aspect-ratio:auto;
+      overflow:hidden;
+    }
+    #mediaModal .mm-panel.pdf-mode .mm-body iframe{
+      width:100%;
+      height:100%;
+      display:block;
+      border:none;
+    }
+    
+    /* 모바일 버튼 텍스트 줄바꿈 분리 */
+    .d-txt { display: none; }
+    .m-txt { display: inline-block; line-height: 1.15; }
+    
+    /* 모바일 툴바 여백 최적화 */
+    .toolbar { gap: 6px; padding: 0 8px; bottom: 70px; }
+    .toolbar .btn {
+      font-size: 14px;
+      padding: 10px 4px;
+      white-space: normal;
+      text-align: center;
+      justify-content: center;
+    }
+  }
+
+  /* 좁은 화면에서는 라벨을 숨기고, 입력칸/버튼 글씨를 키워 한 줄 전체 폭을 더 알차게 사용 */
+  @media (max-width: 430px){
+    .ident label{ display:none; }
+    .login-form-wrap{
+      justify-content:space-between;
+      gap:clamp(6px, 2vw, 10px);
+    }
+    .ident input{
+      font-size:clamp(15px, 4.3vw, 17px);
+      padding-block:4px;
+    }
+    .ident input#loginSid{
+      width:clamp(7ch, 18vw, 8.5ch);
+      flex-basis:clamp(7ch, 18vw, 8.5ch);
+    }
+    .ident input#loginName{
+      width:clamp(5em, 24vw, 6.2em);
+      flex-basis:clamp(5em, 24vw, 6.2em);
+    }
+    .ident input#loginPw{
+      width:clamp(8ch, 22vw, 9.8ch);
+      flex-basis:clamp(8ch, 22vw, 9.8ch);
+    }
+    .login-btn{
+      font-size:clamp(13px, 3.8vw, 15px);
+      padding:6px clamp(9px, 2.8vw, 13px);
+    }
+  }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 캡처 대상 시작 -->
+  <div id="capture">
+
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">
+          <span>경기여자고등학교 · 나의 진로설계와 수강신청</span>
+        </div>
+        <h1><span class="yr">2학년</span> 수강신청 로드맵 <button type="button" id="pwHelpOpen" style="background:none;border:none;padding:0;font-family:var(--font-body);font-size:12px;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font-weight:500;vertical-align:middle;">비밀번호 안내</button></h1>
+      </div>
+      <div class="ident">
+        <!-- 로그인 후 상태 -->
+        <div class="user-info" id="userInfo">
+          <span id="userGreeting"></span>
+          <span class="user-date" id="today"></span>
+          <button class="login-btn ghost" id="logoutBtn" type="button">로그아웃</button>
+        </div>
+        <!-- 로그인 폼 (데스크톱·모바일 공통) -->
+        <div class="login-form-wrap" id="loginFormWrap">
+          <span class="login-field">
+            <label for="loginSid">학번</label>
+            <input id="loginSid" type="text" placeholder="20101" autocomplete="off" maxlength="10" />
+          </span>
+          <span class="sep">|</span>
+          <span class="login-field">
+            <label for="loginName">이름</label>
+            <input id="loginName" type="text" placeholder="김경기" autocomplete="off" maxlength="10" />
+          </span>
+          <span class="sep">|</span>
+          <span class="login-field">
+            <label for="loginPw">비밀번호</label>
+            <input id="loginPw" type="password" placeholder="••••" autocomplete="current-password" maxlength="20" />
+          </span>
+          <button class="login-btn" id="loginBtn" type="button">로그인</button>
+          <span class="login-err" id="loginErr"></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- PDF 저장 버튼: 전체 너비 오른쪽 정렬 -->
+    <!-- 모바일 로그인 모달 -->
+    <div class="login-modal no-print" id="loginModal">
+      <div class="lm-back" id="loginModalBack"></div>
+      <div class="lm-panel">
+        <button class="lm-x" id="loginModalClose" type="button">✕</button>
+        <div class="lm-title">로그인</div>
+        <div class="lm-row">
+          <label for="mLoginSid">학번</label>
+          <input id="mLoginSid" type="text" placeholder="20101" autocomplete="off" maxlength="10" />
+        </div>
+        <div class="lm-row">
+          <label for="mLoginName">이름</label>
+          <input id="mLoginName" type="text" placeholder="김경기" autocomplete="off" maxlength="10" />
+        </div>
+        <div class="lm-row">
+          <label for="mLoginPw">비밀번호</label>
+          <input id="mLoginPw" type="password" placeholder="••••" autocomplete="current-password" maxlength="20" />
+        </div>
+        <div class="lm-err" id="mLoginErr"></div>
+        <button class="lm-submit" id="mLoginBtn" type="button">로그인</button>
+      </div>
+    </div>
+
+    <div class="login-modal no-print" id="loadModal">
+      <div class="lm-back" id="loadModalBack"></div>
+      <div class="lm-panel" style="width:min(440px,92vw);">
+        <button class="lm-x" id="loadModalClose" type="button">✕</button>
+        <div class="lm-title" style="margin-bottom:16px;">저장된 로드맵 목록</div>
+        <div class="login-err" id="loadModalErr" style="min-height:0; margin-bottom:8px; margin-left:0;"></div>
+        <div id="loadModalList" style="max-height:320px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;">
+          </div>
+      </div>
+    </div>
+
+    <p class="note">
+      이 페이지는 <b>가상의 수강신청 연습페이지</b>입니다. 실제 수강신청은 <b>리로스쿨</b>에서 학년단위로 진행됩니다.<br>
+      <b>ⓘ</b> 아이콘을 누르면 각 과목에 대한 자세한 정보(PDF·영상)를 볼 수 있습니다.
+    </p>
+
+    <div class="ribbon">
+      <div class="legend">
+        <span><i class="mk ilban">■</i>일반</span>
+        <span><i class="mk jinro">●</i>진로</span>
+        <span><i class="mk yunghap">▲</i>융합</span>
+        <span><i class="mk sayung">▲</i>사회과학 융합</span>
+      </div>
+      <button class="pdf-mini no-print" id="pdfMiniBtn" type="button" title="PDF로 저장">
+        <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path fill="currentColor" d="M5 3h11l3 3v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm2 2v5h8V5H7zm5 0v4h2V5h-2zM7 14h10v5H7v-5z"/></svg>
+        PDF로 저장
+      </button>
+    </div>
+
+    <!-- PDF 저장 시에만 표시 (상단, 범례 자리). 웹 화면에서는 숨김 -->
+    <div id="printSummary" class="print-only">
+      <span class="ps-title">교과군 필수요건 충족</span>
+      <span id="psItems" class="ps-items"></span>
+    </div>
+
+    <div class="layout">
+      <!-- 펼침면: JS가 학기 4단 + 책등을 채움 -->
+      <div class="spread" id="spread"></div>
+
+    </div>
+
+  </div>
+  <!-- 캡처 대상 끝 -->
+
+  <!-- 제외한 과목 박스 -->
+  <div class="excluded-box no-print" id="excludedBox" hidden>
+    <div class="eb-title">제외한 과목</div>
+    <div class="eb-rows" id="ebRows"></div>
+  </div>
+
+  <!-- ===== 관리자 패널 (admin 로그인 시 표시) ===== -->
+  <div id="adminPanel" class="admin-panel no-print">
+    <div class="admin-tabs">
+      <button class="atab on" data-tab="overview" type="button">전체 현황</button>
+      <button class="atab" data-tab="class" type="button">학급별 현황</button>
+    </div>
+
+    <!-- 전체 현황 -->
+    <section class="atab-panel" id="apOverview">
+      <div class="ap-controls">
+        <label style="display: none;">학기</label>
+        <select id="ovSem">
+          <option value="s21">2학년 1학기</option>
+          <option value="s22">2학년 2학기</option>
+          <option value="s31">3학년 1학기</option>
+          <option value="s32">3학년 2학기</option>
+        </select>
+        <button class="btn-mini primary" id="ovCsvSem" type="button">CSV 다운로드</button>
+      </div>
+      <div class="ov-stats" id="ovStats"></div>
+      <div class="ov-courses" id="ovCourses"></div>
+    </section>
+
+    <!-- 학급별 현황 -->
+    <section class="atab-panel" id="apClass" hidden>
+      <div class="ap-controls">
+        <span class="ap-fixed">1학년</span>
+        <label>반</label>
+        <select id="clsSel"></select>
+        <span class="ap-legend">
+          <i class="cs-dot complete"></i>조건충족
+          <i class="cs-dot draft"></i>임시저장
+          <i class="cs-dot none"></i>미제출
+        </span>
+      </div>
+      <div class="cls-grid" id="clsGrid"></div>
+    </section>
+  </div>
+
+  <!-- 학생 제출내역 상세 모달 -->
+  <div id="stuModal" class="media-modal no-print" hidden>
+    <div class="mm-backdrop" id="stuModalBack"></div>
+    <div class="mm-panel" style="height:auto; max-height:88vh;">
+      <div class="mm-head">
+        <span class="mm-title" id="stuModalTitle"></span>
+        <div class="mm-actions">
+          <button class="mm-x" id="stuModalClose" type="button" aria-label="닫기">✕</button>
+        </div>
+      </div>
+      <div class="mm-body" id="stuModalBody" style="background:#fff; overflow:auto; padding:16px;"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toolbar no-print">
+  <button class="btn btn-ghost" id="resetBtn" type="button">
+    <span class="d-txt">전체초기화</span>
+    <span class="m-txt" style="letter-spacing:-0.05em;">초기화</span>
+  </button>
+  <button class="btn btn-ghost" id="loadBtn" type="button" style="display:none">
+    <span class="d-txt">불러오기</span>
+    <span class="m-txt">불러<br>오기</span>
+  </button>
+  <button class="btn btn-save" id="saveBtn" type="button" style="display:none">
+    <span class="d-txt">임시저장</span>
+    <span class="m-txt">임시<br>저장</span>
+  </button>
+  <button class="btn btn-primary" id="submitBtn" type="button" style="display:none">
+    <span class="d-txt">제출하기</span>
+    <span class="m-txt">제출<br>하기</span>
+  </button>
+</div>
+
+<!-- 화면 하단 고정 미니바: 교과군 필수요건만 표시 (모바일/데스크톱 공통) -->
+<!-- ⓘ 팝오버 -->
+<div id="mediaPop" class="media-pop no-print" hidden>
+  <button class="mp-btn" data-kind="pdf" type="button" title="PDF 과목 안내 보기" aria-label="PDF 보기">
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5z"/><text x="12" y="17" font-size="6.5" font-weight="700" text-anchor="middle" fill="#fff">PDF</text></svg>
+  </button>
+  <button class="mp-btn yt" data-kind="yt" type="button" title="유튜브 과목 안내 보기" aria-label="유튜브 보기">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="#fff" d="M6 4.5v15l14-7.5z"/></svg>
+  </button>
+</div>
+
+<!-- PDF / 유튜브 모달 -->
+<div id="mediaModal" class="media-modal no-print" hidden>
+  <div class="mm-backdrop"></div>
+  <div class="mm-panel" role="dialog" aria-modal="true" aria-labelledby="mmTitle">
+    <div class="mm-head">
+      <span class="mm-title" id="mmTitle"></span>
+      <div class="mm-actions">
+        <a class="mm-ext" id="mmExt" href="#" target="_blank" rel="noopener" hidden>새 탭에서 열기 ↗</a>
+        <button class="mm-x" id="mmClose" type="button" aria-label="닫기">✕</button>
+      </div>
+    </div>
+    <div class="mm-body" id="mmBody"></div>
+  </div>
+</div>
+
+<!-- 중복 이름 저장 옵션 모달 -->
+<div id="dupeModal" class="media-modal no-print" hidden>
+  <div class="mm-backdrop" id="dupeModalBack"></div>
+  <div class="mm-panel" style="height:auto; width:min(380px,92vw);">
+    <div class="mm-head">
+      <span class="mm-title">이미 같은 이름이 있습니다</span>
+    </div>
+    <div style="padding:18px 20px; display:flex; flex-direction:column; gap:10px;">
+      <p class="dupe-desc" id="dupeDesc" style="margin:0 0 6px; font-size:13.5px; color:var(--ink-soft); line-height:1.5;"></p>
+      <button class="dupe-opt" id="dupeOverwrite" type="button">덮어쓰기</button>
+      <button class="dupe-opt secondary" id="dupeRename" type="button">이름 변경</button>
+      <button class="dupe-opt cancel" id="dupeCancel" type="button">취소</button>
+    </div>
+  </div>
+</div>
+
+<!-- 비밀번호 안내 모달 -->
+<div class="login-modal no-print" id="pwHelpModal">
+  <div class="lm-back" id="pwHelpModalBack"></div>
+  <div class="lm-panel">
+    <button class="lm-x" id="pwHelpModalClose" type="button">✕</button>
+    <div class="lm-title">비밀번호 안내</div>
+    <ul style="margin:4px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink);line-height:1.8;display:flex;flex-direction:column;gap:10px;list-style:disc;">
+      <li>비밀번호는 해당하는 학번, 이름으로 <b>처음 로그인할 때 사용한 비밀번호</b>로 설정됩니다.</li>
+      <li>비밀번호 재설정이 필요한 경우, <b>1교무실 교사 정솔 (010-6349-7532)</b>에게 문자 또는 직접 방문하세요. 해당 학생의 번호가 아니면 문자를 통한 리셋이 제한될 수 있습니다.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="statusbar no-print" id="statusbar" aria-label="교과군 필수 조건 충족 현황"></div>
+
+<script>
+/* =========================================================
+   1) 과목 데이터 (2025학년도 입학생 교육과정 편성표·가이드북 기준)
+   t: ilban(■) / jinro(●) / yunghap(▲) / sayung(△)
+   ========================================================= */
+const TYPE = {
+  ilban:   { mk:"■", cls:"ilban" },
+  jinro:   { mk:"●", cls:"jinro" },
+  yunghap: { mk:"▲", cls:"yunghap" },
+  sayung:  { mk:"▲", cls:"sayung" },
+};
+
+// 교과 → 충족 판정용 카테고리
+function catOf(subject){
+  if(subject==="국어"||subject==="수학"||subject==="영어") return "KME"; // 국수영 합계
+  if(subject==="사회") return "SOC";
+  if(subject==="과학") return "SCI";
+  if(subject==="기술·가정/정보") return "TECH";
+  if(subject==="제2외국어/한문") return "LANG";
+  if(subject==="예술") return "ART";
+  return "ETC";
+}
+
+/* 과목별 자료: p = guide.pdf 물리 페이지, y = 유튜브 영상 ID (2025학년도 입학생 가이드북 기준 갱신)
+   - 정보과학·음악콘텐츠 제작 기초·조형: 2025 가이드북에 개별 소개 페이지 없음(전문교과/특목고 전용) → 자료 없음, ⓘ 미표시 */
+const MEDIA={
+  "주제 탐구 독서":{p:40,y:"f2c5THgpmak"},
+  "기하":{p:49,y:"qnNEHIyn1OU"},
+  "세계 문화와 영어":{p:63,y:"ENw3_J_XrIk"},
+  "세계시민과 지리":{p:66,y:"8p1Iy8TgjXI"},
+  "현대사회와 윤리":{p:69,y:"B_6Jq4u_DHY"},
+  "법과 사회":{p:74,y:"D5fvo3khGcI"},
+  "동아시아 역사 기행":{p:72,y:"OgIn8jrrak0"},
+  "금융과 경제생활":{p:82,y:"GxjyRRXwgEM"},
+  "물리학":{p:87,y:"inDup_lRBes"},
+  "화학":{p:88,y:"kE_t-3SlBUQ"},
+  "지구과학":{p:90,y:"OJduZuwnmwc"},
+  "세포와 물질대사":{p:95,y:"60ZNah735uI"},
+  "생활과학 탐구":{p:120,y:"GEDN6d6Ba5k"},
+  "데이터 과학":{p:126,y:"xF6bt7sxTZQ"},
+  "스페인어":{p:129,y:"2JyX4PV3O28"},
+  "일본어":{p:129,y:"XOZT2Xmshk8"},
+  "음악 연주와 창작":{p:111,y:"V1-64ky4OoI"},
+  "미술 창작":{p:115,y:"-TQSYy3-eNI"},
+  "문학과 영상":{p:41,y:"_i661jyHjbY"},
+  "인공지능 수학":{p:51,y:"uhIfxd0SweQ"},
+  "영미 문학 읽기":{p:59,y:"nFXtrdvmVlw"},
+  "사회와 문화":{p:68,y:"67oFbY8Rkys"},
+  "세계사":{p:67,y:"Wbh9eI_02_w"},
+  "정치":{p:73,y:"F3gkE64YF6w"},
+  "윤리문제 탐구":{p:83,y:"tln1XgsFwxU"},
+  "기후변화와 지속가능한 세계":{p:84,y:"j8RNTH4_BcM"},
+  "생명과학":{p:89,y:"3TfxrTHO2nI"},
+  "역학과 에너지":{p:91,y:"P1gsKXHt0Qk"},
+  "물질과 에너지":{p:93,y:"K8pbCur_le0"},
+  "지구시스템과학":{p:97,y:"REq4IcQJpZY"},
+  "융합과학 탐구":{p:101,y:"XRVPgSFOuXc"},
+  "아동발달과 부모":{p:123,y:"k2_ye1IJx68"},
+  "스페인어 회화":{p:131,y:"5zgUckjkcEA"},
+  "일본어 회화":{p:131,y:"z219CCYuPi4"},
+  "음악 감상과 비평":{p:112,y:"0jh4tHjc0Hg"},
+  "미술 감상과 비평":{p:116,y:"6gz5hjfU8WU"},
+  "독서 토론과 글쓰기":{p:42,y:"EWeFbPn1Joo"},
+  "미적분Ⅱ":{p:50,y:"RvVz-HtHgLs"},
+  "수학과제 탐구":{p:54,y:"WgEo6GqrcKg"},
+  "심화 영어":{p:60,y:"0rXqEFbQwTk"},
+  "윤리와 사상":{p:76,y:"ZBdTW9hZOdc"},
+  "경제":{p:75,y:"DfL9JlpxisY"},
+  "한국지리 탐구":{p:70,y:"cgj5-o38mCg"},
+  "사회문제 탐구":{p:81,y:"LAkca6ix5Ck"},
+  "역사로 탐구하는 현대 세계":{p:80,y:"KcM2IDNmMR8"},
+  "전자기와 양자":{p:92,y:"metLGbJoyYY"},
+  "화학 반응의 세계":{p:94,y:"WeA06Ffmu5U"},
+  "생물의 유전":{p:96,y:"PPeLwhZSQ0k"},
+  "행성우주과학":{p:98,y:"yUx5HNWxSPs"},
+  "기후변화와 환경생태":{p:100,y:"HDegDycz6xM"},
+  "지식 재산 일반":{p:122,y:"DjN_1hewQXI"},
+  "인공지능 기초":{p:125,y:"ehooAIfH69g"},
+  "스페인어권 문화":{p:132,y:"hCIcazKU_CY"},
+  "일본 문화":{p:132,y:"0cpiP2-zQSk"},
+  "음악과 미디어":{p:113,y:"ibYM0GpglK4"},
+  "미술과 매체":{p:117,y:"ZNjwVfVRupw"},
+  "매체 의사소통":{p:43,y:"nuawyF-W1qo"},
+  "언어생활 탐구":{p:44,y:"Oi5ThE0quXs"},
+  "수학과 문화":{p:52,y:"_dS32uMM69E"},
+  "실용 통계":{p:53,y:"ntsE8jsBudM"},
+  "심화 영어 독해와 작문":{p:61,y:"KzuKZxCxyhE"},
+  "미디어 영어":{p:62,y:"2cqxzbNIDHs"},
+  "국제 관계의 이해":{p:78,y:"_m5eZXUTeCw"},
+  "인문학과 윤리":{p:77,y:"jUvaRQ45cXk"},
+  "도시의 미래 탐구":{p:71,y:"ykLmJBuUnb4"},
+  "여행지리":{p:79,y:"pM9asAyjJSM"},
+  "과학의 역사와 문화":{p:99,y:"Tfrcyc6dv-c"},
+  "창의 공학 설계":{p:121,y:"3Ol0JuPziXc"},
+  "소프트웨어와 생활":{p:127,y:"baS9Wa0LO44"},
+  "심화 스페인어":{p:130,y:"K1B16Mjs9Lc"},
+  "심화 일본어":{p:130,y:"gAfarfixYXE"}
+};
+const PDF_FILE = "guide.pdf";   // 레포 루트의 PDF
+
+const SEMESTERS = [
+  {
+    id:"s21", title:"2학년 1학기", need:5, side:"left",
+    fixed:["문학","대수","영어Ⅰ","스포츠생활1"],
+    groups:[
+      { subject:"국어", courses:[ ["주제 탐구 독서","jinro"] ] },
+      { subject:"수학", courses:[ ["기하","jinro"] ] },
+      { subject:"영어", courses:[ ["세계 문화와 영어","yunghap"] ] },
+      { subject:"사회", courses:[
+        ["세계시민과 지리","ilban"],["현대사회와 윤리","ilban"],
+        ["법과 사회","jinro"],["동아시아 역사 기행","jinro"],
+        ["금융과 경제생활","sayung"] ] },
+      { subject:"과학", courses:[
+        ["물리학","ilban"],["화학","ilban"],["지구과학","ilban"],
+        ["세포와 물질대사","jinro"] ] },
+      { subject:"기술·가정/정보", courses:[ ["생활과학 탐구","jinro"],["데이터 과학","jinro"] ] },
+      { subject:"제2외국어/한문", courses:[ ["스페인어","ilban"],["일본어","ilban"] ] },
+      { subject:"예술", courses:[ ["음악 연주와 창작","jinro"],["미술 창작","jinro"] ] },
+    ]
+  },
+  {
+    id:"s22", title:"2학년 2학기", need:5, side:"left",
+    fixed:["독서와 작문","미적분Ⅰ","영어Ⅱ","스포츠생활2"],
+    groups:[
+      { subject:"국어", courses:[ ["문학과 영상","jinro"] ] },
+      { subject:"수학", courses:[ ["인공지능 수학","jinro"] ] },
+      { subject:"영어", courses:[ ["영미 문학 읽기","jinro"] ] },
+      { subject:"사회", courses:[
+        ["사회와 문화","ilban"],["세계사","ilban"],["정치","jinro"],
+        ["윤리문제 탐구","sayung"],["기후변화와 지속가능한 세계","sayung"] ] },
+      { subject:"과학", courses:[
+        ["생명과학","ilban"],["역학과 에너지","jinro"],
+        ["물질과 에너지","jinro"],["지구시스템과학","jinro"],
+        ["융합과학 탐구","sayung"] ] },
+      { subject:"기술·가정/정보", courses:[ ["아동발달과 부모","yunghap"],["정보과학","jinro"] ] },
+      { subject:"제2외국어/한문", courses:[ ["스페인어 회화","jinro"],["일본어 회화","jinro"] ] },
+      { subject:"예술", courses:[ ["음악 감상과 비평","jinro"],["미술 감상과 비평","jinro"] ] },
+    ]
+  },
+  {
+    id:"s31", title:"3학년 1학기", need:6, side:"right",
+    fixed:["화법과 언어","확률과 통계","영어 독해와 작문","스포츠 문화"],
+    groups:[
+      { subject:"국어", courses:[ ["독서 토론과 글쓰기","yunghap"] ] },
+      { subject:"수학", courses:[ ["미적분Ⅱ","jinro"],["수학과제 탐구","yunghap"] ] },
+      { subject:"영어", courses:[ ["심화 영어","jinro"] ] },
+      { subject:"사회", courses:[
+        ["윤리와 사상","jinro"],["경제","jinro"],["한국지리 탐구","jinro"],
+        ["사회문제 탐구","sayung"],["역사로 탐구하는 현대 세계","sayung"] ] },
+      { subject:"과학", courses:[
+        ["전자기와 양자","jinro"],["화학 반응의 세계","jinro"],
+        ["생물의 유전","jinro"],["행성우주과학","jinro"],
+        ["기후변화와 환경생태","sayung"] ] },
+      { subject:"기술·가정/정보", courses:[ ["지식 재산 일반","yunghap"],["인공지능 기초","jinro"] ] },
+      { subject:"제2외국어/한문", courses:[ ["스페인어권 문화","yunghap"],["일본 문화","yunghap"] ] },
+      { subject:"예술", courses:[ ["음악과 미디어","yunghap"],["미술과 매체","yunghap"] ] },
+    ]
+  },
+  {
+    id:"s32", title:"3학년 2학기", need:9, side:"right",
+    fixed:["스포츠 과학"],
+    groups:[
+      { subject:"국어", courses:[ ["매체 의사소통","yunghap"],["언어생활 탐구","yunghap"] ] },
+      { subject:"수학", courses:[ ["수학과 문화","yunghap"],["실용 통계","yunghap"] ] },
+      { subject:"영어", courses:[ ["심화 영어 독해와 작문","jinro"],["미디어 영어","yunghap"] ] },
+      { subject:"사회", courses:[
+        ["국제 관계의 이해","jinro"],["인문학과 윤리","jinro"],
+        ["도시의 미래 탐구","jinro"],["여행지리","sayung"] ] },
+      { subject:"과학", courses:[
+        ["과학의 역사와 문화","sayung"] ] },
+      { subject:"기술·가정/정보", courses:[ ["창의 공학 설계","yunghap"],["소프트웨어와 생활","yunghap"] ] },
+      { subject:"제2외국어/한문", courses:[ ["심화 스페인어","jinro"],["심화 일본어","jinro"] ] },
+      { subject:"예술", courses:[ ["음악콘텐츠 제작 기초","jinro"],["조형","jinro"] ] },
+    ]
+  },
+];
+
+/* =========================================================
+   2) 상태 + 펼침면 렌더링
+   ========================================================= */
+const selected = new Set();         // key: `${semId}::${courseName}`
+const excluded = new Set();         // 제외한 과목: `${semId}::${courseName}`
+const key = (sem, name) => sem + "::" + name;
+
+/* ----- 과목 제외 / 복원 ----- */
+function excludeCourse(semId, name){
+  const k = key(semId, name);
+  excluded.add(k);
+  // 선택돼 있었다면 해제
+  if(selected.has(k)){
+    selected.delete(k);
+    const b = document.querySelector(`.course[data-sem="${semId}"][data-name="${CSS.escape(name)}"]`);
+    if(b) b.setAttribute("aria-pressed","false");
+  }
+  applyExcluded();
+  recompute();
+}
+function restoreCourse(semId, name){
+  excluded.delete(key(semId, name));
+  applyExcluded();
+  recompute();
+}
+// 행 숨김/표시 + 하단 박스 다시 그리기
+function applyExcluded(){
+  document.querySelectorAll(".course-row").forEach(row => {
+    row.classList.toggle("is-excluded", excluded.has(row.dataset.key));
+  });
+  renderExcludedBox();
+}
+// 하단 "제외한 과목" 박스 렌더
+function renderExcludedBox(){
+  const box = document.getElementById("excludedBox");
+  const rows = document.getElementById("ebRows");
+  if(!box || !rows) return;
+  rows.innerHTML = "";
+  let any = false;
+  SEMESTERS.forEach(sem => {
+    const names = [];
+    excluded.forEach(k => {
+      const i = k.indexOf("::");
+      if(k.slice(0, i) === sem.id) names.push(k.slice(i + 2));
+    });
+    if(!names.length) return;
+    any = true;
+    const r = document.createElement("div");
+    r.className = "eb-row";
+    r.innerHTML = `<span class="eb-sem">${sem.title}</span>`;
+    const chips = document.createElement("div");
+    chips.className = "eb-chips";
+    names.forEach(nm => {
+      const chip = document.createElement("span");
+      chip.className = "eb-chip";
+      chip.innerHTML = `<span class="eb-nm">${nm}</span>`;
+      const rb = document.createElement("button");
+      rb.type = "button"; rb.className = "eb-restore"; rb.textContent = "복원";
+      rb.addEventListener("click", () => restoreCourse(sem.id, nm));
+      chip.appendChild(rb);
+      chips.appendChild(chip);
+    });
+    r.appendChild(chips);
+    rows.appendChild(r);
+  });
+  box.hidden = !any;
+}
+// 저장/제출용 제외 목록 수집
+function collectExcluded(){
+  const obj = {};
+  SEMESTERS.forEach(s => obj[s.id] = []);
+  excluded.forEach(k => {
+    const i = k.indexOf("::");
+    const sid = k.slice(0, i);
+    if(obj[sid]) obj[sid].push(k.slice(i + 2));
+  });
+  return obj;
+}
+
+function buildSpread(){
+  const spread = document.getElementById("spread");
+  SEMESTERS.forEach((sem, idx) => {
+    // 2학년 면과 3학년 면 사이에 책등 삽입
+    if(idx === 2){
+      const spine = document.createElement("div");
+      spine.className = "spine";
+      spread.appendChild(spine);
+    }
+
+    const col = document.createElement("div");
+    col.className = "col";
+    col.dataset.sem = sem.id;
+
+    // 학기 헤더 (학교 지정 과목을 헤더 안에 한 줄로 통합)
+    const head = document.createElement("div");
+    head.className = "col-head";
+    head.innerHTML =
+      `<button class="sem-reset no-print" type="button" title="이 학기 선택 초기화">↺ 초기화</button>
+       <div class="head-row">
+         <div class="gterm">${sem.title}</div>
+         <div class="pick">택 ${sem.need} · <span class="count" id="cnt-${sem.id}">0 / ${sem.need}</span></div>
+       </div>
+       <div class="fixed-inline"><b>학교지정</b> ${sem.fixed.join(" | ")}</div>`;
+    head.querySelector(".sem-reset").addEventListener("click", () => resetSemester(sem.id));
+    col.appendChild(head);
+
+    // 교과 그룹 + 과목
+    sem.groups.forEach(g => {
+      const grp = document.createElement("div");
+      grp.className = "group";
+      grp.innerHTML = `<div class="gname">${g.subject}</div>`;
+      g.courses.forEach(([name, t]) => {
+        const ty = TYPE[t];
+        const row = document.createElement("div");
+        row.className = "course-row";
+        row.dataset.key = sem.id + "::" + name;
+
+        // 자료(PDF/유튜브)가 있는 과목에만 ⓘ, 없으면 정렬용 빈칸
+        const media = MEDIA[name];
+        if(media){
+          const info = document.createElement("button");
+          info.type = "button";
+          info.className = "info-ic no-print";
+          info.setAttribute("aria-label", name + " 자료 보기");
+          info.innerHTML = "i";
+          info.addEventListener("click", (e) => { e.stopPropagation(); openMediaPop(info, name); });
+          row.appendChild(info);
+        } else {
+          const sp = document.createElement("span");
+          sp.className = "info-sp";
+          row.appendChild(sp);
+        }
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "course";
+        btn.setAttribute("aria-pressed", "false");
+        btn.dataset.sem = sem.id;
+        btn.dataset.name = name;
+        btn.dataset.cat = catOf(g.subject);
+        btn.innerHTML =
+          `<span class="mk ${ty.cls}">${ty.mk}</span>
+           <span class="nm">${name}</span>
+           <span class="box">✓</span>`;
+        btn.addEventListener("click", () => toggle(btn, sem.id, name));
+        row.appendChild(btn);
+
+        // 제외(✕) 버튼 — 안 들을 과목을 리스트에서 빼기
+        const xBtn = document.createElement("button");
+        xBtn.type = "button";
+        xBtn.className = "excl-btn no-print";
+        xBtn.title = "이 과목 제외";
+        xBtn.setAttribute("aria-label", name + " 제외");
+        xBtn.innerHTML = "✕";
+        xBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          // 선택(체크)된 상태면 제외 불가
+          if(btn.getAttribute("aria-pressed") === "true"){
+            alert("체크박스 해제 후 제외 가능합니다.");
+            return;
+          }
+          excludeCourse(sem.id, name);
+        });
+        row.appendChild(xBtn);
+
+        grp.appendChild(row);
+      });
+      col.appendChild(grp);
+    });
+
+    spread.appendChild(col);
+  });
+}
+
+function toggle(btn, semId, name){
+  const k = key(semId, name);
+  if(selected.has(k)){ selected.delete(k); btn.setAttribute("aria-pressed","false"); }
+  else { selected.add(k); btn.setAttribute("aria-pressed","true"); }
+  recompute();
+}
+
+// 2학년(이미 확정된) 과목 하나를 화면에 기본값으로 체크
+// - 실수로 잘못 반영된 경우 학생이 자유롭게 해제/변경 가능 (잠그지 않음)
+function prefillConfirmedCourse(semId, name){
+  const btn = document.querySelector(`.course[data-sem="${semId}"][data-name="${CSS.escape(name)}"]`);
+  if(!btn) return false; // 과목명이 앱 목록과 다르면 조용히 건너뜀 (화면 깨짐 방지)
+  btn.setAttribute("aria-pressed", "true");
+  selected.add(key(semId, name));
+  btn.title = "2학년 확정 수강내역 기준 기본값 (필요 시 변경 가능)";
+  return true;
+}
+
+// 로그인한 학생의 2학년 확정 수강내역을 서버에서 받아와 기본값으로 반영
+// - 학생 role일 때만 호출, 기록이 없거나 오류가 나도 조용히 무시(수동 진행 가능하도록)
+let confirmedApplied = false;
+async function applyConfirmedCourses(){
+  if(confirmedApplied) return; // 세션 중 중복 호출 방지
+  if(!authUser || authUser.role !== "student") return;
+  confirmedApplied = true;
+  try{
+    const res = await fetch(API + "/confirmed", {
+      headers: { "Authorization": "Bearer " + authToken }
+    });
+    if(!res.ok) return; // 기록 없음(신규/편입생 등) → 그냥 빈 상태로 진행
+    const data = await res.json();
+    Object.entries(data.selections || {}).forEach(([semId, courses]) => {
+      (courses || []).forEach(name => prefillConfirmedCourse(semId, name));
+    });
+    recompute();
+  } catch {
+    // 네트워크 오류 시에도 화면은 정상 진행 (2학년 자동 채움만 실패)
+  }
+}
+
+/* =========================================================
+   3) 충족 판정 + 패널 렌더링
+   ========================================================= */
+function recompute(){
+  // 학기별 선택 수
+  const semCount = {};
+  SEMESTERS.forEach(s => semCount[s.id] = 0);
+  // 카테고리별 누적
+  const cat = { KME:0, SOC:0, SCI:0, TECH:0, LANG:0, ART:0 };
+
+  document.querySelectorAll('.course[aria-pressed="true"]').forEach(btn => {
+    semCount[btn.dataset.sem]++;
+    cat[btn.dataset.cat]++;
+  });
+
+  // --- 학기 헤더 배지(미완료=빨강 / 정원 채움=초록) + 정원 도달 시 미선택 과목 비활성화 ---
+  SEMESTERS.forEach(s => {
+    const c = semCount[s.id];
+    const el = document.getElementById("cnt-" + s.id);
+    el.textContent = `${c} / ${s.need}`;
+    const done = (c === s.need);
+    el.classList.toggle("ok", done);     // 초록 = 정원 충족
+    el.classList.toggle("bad", !done);   // 빨강 = 미완료
+
+    // 정원에 도달하면 아직 선택하지 않은 과목은 더 누를 수 없게 비활성화
+    // (이미 선택한 과목은 해제할 수 있도록 활성 상태 유지)
+    const atLimit = c >= s.need;
+    document.querySelectorAll('.course[data-sem="' + s.id + '"]').forEach(btn => {
+      const isSel = btn.getAttribute("aria-pressed") === "true";
+      btn.disabled = atLimit && !isSel;
+    });
+  });
+
+  // --- 교과군 필수요건: 하단 미니바 + PDF 요약에 표시 ---
+  const techLang = cat.TECH + cat.LANG;
+  const kmeOk = cat.KME <= 8;     // 국·수·영 합계 8과목 "이하"
+  const tlOk  = techLang >= 4;    // 기가/정보 + 제2외국어 4과목 "이상"
+  const artOk = cat.ART >= 2;     // 예술 2과목 "이상"
+
+  // ⬇ = 이하(최대) 조건, ⬆ = 이상(최소) 조건
+  const reqs = [
+    { ok:kmeOk, label:"국·수·영",        val:`${cat.KME}/8⬇` },
+    { ok:tlOk,  label:"기가/정보 외국어", val:`${techLang}/4⬆` },
+    { ok:artOk, label:"예술",            val:`${cat.ART}/2⬆` },
+  ];
+
+  // 하단 미니바
+  const sb = document.getElementById("statusbar");
+  sb.classList.toggle("done", kmeOk && tlOk && artOk);
+  sb.innerHTML = reqs.map(r => sbChip(r.ok, r.label, r.val)).join("");
+
+  // PDF 저장 시 출력되는 요약
+  document.getElementById("psItems").innerHTML = reqs.map(r =>
+    `<span class="ps-item ${r.ok ? "ok" : "bad"}">${r.ok ? "✓" : "✗"} ${r.label} ${r.val}</span>`
+  ).join("");
+}
+
+// 현황바 칩 (충족=녹색 ✓ / 미충족=붉은색 ✗)
+function sbChip(ok, label, val){
+  return `<span class="sb-chip ${ok ? "ok" : ""}">
+    <span class="v">${ok ? "✓" : "✗"} ${val}</span>
+    <span class="l">${label}</span>
+  </span>`;
+}
+
+/* =========================================================
+   4) 초기화 / 날짜 / PDF 저장
+   ========================================================= */
+function resetAll(){
+  selected.clear();
+  document.querySelectorAll('.course[aria-pressed="true"]')
+    .forEach(b => b.setAttribute("aria-pressed","false"));
+  excluded.clear();
+  applyExcluded();
+  recompute();
+}
+
+// 특정 학기만 초기화
+function resetSemester(semId){
+  document.querySelectorAll('.course[data-sem="' + semId + '"][aria-pressed="true"]')
+    .forEach(b => {
+      selected.delete(key(semId, b.dataset.name));
+      b.setAttribute("aria-pressed","false");
+    });
+  // 해당 학기 제외 항목 복원 (Set 순회 중 삭제 방지: 스냅샷 후 삭제)
+  [...excluded]
+    .filter(k => k.startsWith(semId + "::"))
+    .forEach(k => excluded.delete(k));
+  applyExcluded();
+  recompute();
+}
+
+function setToday(){
+  const d = new Date();
+  const s = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+  document.getElementById("today").textContent = s;
+}
+
+async function exportPDF(){
+  const btn = document.getElementById("pdfMiniBtn");
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.textContent = "PDF 만드는 중…";
+
+  // 2. 로그인 여부에 따른 학번/이름 데이터 추출 분기 처리 (에러 방지)
+  let sidVal = "";
+  let nameVal = "";
+
+  if (authToken && authUser) {
+    // 로그인 상태일 때는 서버 세션 정보 활용
+    sidVal = authUser.sid || "";
+    nameVal = authUser.name || "";
+  } else {
+    // 비로그인 상태일 때는 입력창(데스크톱/모바일 전체 체크)에 값이 있으면 활용
+    const loginSid = document.getElementById("loginSid");
+    const loginName = document.getElementById("loginName");
+    const mLoginSid = document.getElementById("mLoginSid");
+    const mLoginName = document.getElementById("mLoginName");
+
+    sidVal = (loginSid && loginSid.value) || (mLoginSid && mLoginSid.value) || "";
+    nameVal = (loginName && loginName.value) || (mLoginName && mLoginName.value) || "";
+  }
+
+  // 3. 입력 폼의 상태 보존 처리 (존재할 때만 안전하게 실행)
+  const loginSid = document.getElementById("loginSid");
+  const loginName = document.getElementById("loginName");
+  if (loginSid && loginSid.value) loginSid.setAttribute("value", loginSid.value);
+  if (loginName && loginName.value) loginName.setAttribute("value", loginName.value);
+
+  const target = document.getElementById("capture");
+  const FORCE_W = 1320;                 
+  const prevWidth = target.style.width;
+  target.style.width = FORCE_W + "px";  
+  document.body.classList.add("capturing");
+
+  try{
+    const canvas = await html2canvas(target, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      windowWidth: FORCE_W,
+      windowHeight: Math.max(target.scrollHeight, 900),
+    });
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+    const pageW = pdf.internal.pageSize.getWidth();   
+    const pageH = pdf.internal.pageSize.getHeight();  
+    const margin = 14;                                 
+    const availW = pageW - margin * 2;
+    const availH = pageH - margin * 2;
+
+    const ratio = canvas.width / canvas.height;
+    let drawW = availW;                  
+    let drawH = drawW / ratio;
+    if(drawH > availH){ drawH = availH; drawW = drawH * ratio; } 
+    const x = (pageW - drawW) / 2;       
+    const y = margin;                    
+
+    pdf.addImage(imgData, "JPEG", x, y, drawW, drawH);
+    
+    // 4. 파일명 동적 생성 (정보가 없으면 기본 명칭으로 저장됨)
+    const idName = (sidVal + nameVal).trim().replace(/\s+/g, "");
+    const d = new Date();
+    const yymmdd = String(d.getFullYear()).slice(2)
+                 + String(d.getMonth() + 1).padStart(2, "0")
+                 + String(d.getDate()).padStart(2, "0");
+    const fname = `${idName ? "[" + idName + "]" : ""}선택과목 로드맵_${yymmdd}`
+                    .replace(/[\\/:*?"<>|]/g, "_");  
+    pdf.save(fname + ".pdf");
+  } catch(e){
+    alert("PDF 생성 중 문제가 발생했습니다. 인터넷 연결을 확인하고 다시 시도해 주세요.");
+    console.error(e);
+  } finally{
+    document.body.classList.remove("capturing");
+    target.style.width = prevWidth;     
+    btn.disabled = false; btn.innerHTML = orig;
+  }
+}
+
+/* =========================================================
+   5) 시작 + 가로 스크롤 필요 여부 판단
+   ========================================================= */
+function checkOverflow(){
+  const spread = document.getElementById("spread");
+  spread.classList.toggle("scroll", spread.scrollWidth > spread.clientWidth + 2);
+}
+
+buildSpread();
+setToday();
+applyExcluded();
+recompute();
+checkOverflow();
+window.addEventListener("resize", checkOverflow);
+document.getElementById("resetBtn").addEventListener("click", resetAll);
+document.getElementById("pdfMiniBtn").addEventListener("click", exportPDF);
+
+/* =========================================================
+   6) ⓘ 팝오버 + PDF/유튜브 모달
+   ========================================================= */
+const pop = document.getElementById("mediaPop");
+const modal = document.getElementById("mediaModal");
+const mmBody = document.getElementById("mmBody");
+const mmTitle = document.getElementById("mmTitle");
+const mmExt = document.getElementById("mmExt");
+let popName = null;
+
+function openMediaPop(anchor, name){
+  const m = MEDIA[name];
+  if(!m) return;
+  popName = name;
+  const r = anchor.getBoundingClientRect();
+  pop.querySelector('[data-kind="pdf"]').style.display = m.p ? "" : "none";
+  pop.querySelector('[data-kind="yt"]').style.display  = m.y ? "" : "none";
+  pop.hidden = false;
+  const popH = pop.offsetHeight;
+  let left = r.left - 3;
+  let top  = r.top + r.height/2 - popH/2;
+  left = Math.max(6, Math.min(left, window.innerWidth - pop.offsetWidth - 6));
+  top  = Math.max(6, Math.min(top, window.innerHeight - popH - 6));
+  pop.style.left = left + "px";
+  pop.style.top  = top + "px";
+}
+function closeMediaPop(){ pop.hidden = true; popName = null; }
+
+pop.querySelectorAll(".mp-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    const name = popName, m = MEDIA[name];
+    closeMediaPop();
+    if(!m) return;
+    if(b.dataset.kind === "pdf") openPdf(name, m.p);
+    else openYt(name, m.y);
+  });
+});
+
+function openPdf(name, page){
+  mmTitle.textContent = name + " · 과목 안내(PDF)";
+  mmExt.hidden = false;
+  mmExt.href = PDF_FILE + "#page=" + page;
+  
+  // [수정] 모달 패널에 pdf-mode 클래스 추가
+  const panel = modal.querySelector(".mm-panel");
+  panel.classList.add("pdf-mode");
+  panel.classList.remove("yt-mode"); // 기존 yt-mode가 있다면 제거
+  
+  mmBody.className = "mm-body";
+  mmBody.innerHTML = `<iframe src="pdfviewer.html?file=${encodeURIComponent(PDF_FILE)}&page=${page}" title="${name} PDF" scrolling="yes"></iframe>`;
+  showModal();
+}
+
+function openYt(name, id){
+  mmTitle.textContent = name + " · 과목 안내(영상)";
+
+  // [수정] 모달 패널에 pdf-mode 클래스 추가
+  const panel = modal.querySelector(".mm-panel");
+  panel.classList.add("yt-mode");
+  panel.classList.remove("pdf-mode");
+
+  mmExt.hidden = false;
+  mmExt.href = "https://www.youtube.com/watch?v=" + id;
+  mmExt.textContent = "유튜브에서 열기 ↗";
+  mmBody.className = "mm-body yt";
+  mmBody.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0"
+    title="${name} 영상" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  showModal();
+}
+
+let mediaModalHistoryPushed = false;
+let modalScrollY = 0;
+
+function lockPageBehindModal(){
+  modalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  document.body.style.top = `-${modalScrollY}px`;
+  document.body.classList.add("modal-open");
+}
+function unlockPageBehindModal(){
+  document.body.classList.remove("modal-open");
+  document.body.style.top = "";
+  window.scrollTo(0, modalScrollY);
+}
+
+function showModal(){
+  modal.hidden = false;
+  lockPageBehindModal();
+
+  // 모바일 뒤로가기/스와이프 뒤로가기 1회 = 페이지 이탈이 아니라 모달 닫기
+  if(!mediaModalHistoryPushed){
+    history.pushState({ ...(history.state || {}), mediaModalOpen: true }, "", location.href);
+    mediaModalHistoryPushed = true;
+  }
+}
+
+function closeModal(options = {}){
+  if(modal.hidden && !mediaModalHistoryPushed) return;
+
+  // X/배경/Escape로 닫을 때도 우리가 pushState한 히스토리를 먼저 소비한다.
+  if(mediaModalHistoryPushed && !options.fromPopstate){
+    history.back();
+    return;
+  }
+
+  modal.hidden = true;
+  mmBody.innerHTML = "";
+  mmExt.textContent = "새 탭에서 열기 ↗";
+  unlockPageBehindModal();
+  mediaModalHistoryPushed = false;
+  
+  // [추가] 모달 패널 클래스 초기화
+  const panel = modal.querySelector(".mm-panel");
+  panel.classList.remove("pdf-mode", "yt-mode");
+}
+
+window.addEventListener("popstate", () => {
+  if(mediaModalHistoryPushed && !modal.hidden){
+    closeModal({ fromPopstate: true });
+  }
+});
+
+// iOS Safari에서 모달 바깥/헤더 영역 핀치가 전체 페이지 확대를 유발하는 것 방지
+["gesturestart", "gesturechange", "gestureend"].forEach(type => {
+  document.addEventListener(type, e => {
+    if(!modal.hidden) e.preventDefault();
+  }, { passive:false });
+});
+
+document.getElementById("mmClose").addEventListener("click", () => closeModal());
+modal.querySelector(".mm-backdrop").addEventListener("click", () => closeModal());
+document.addEventListener("keydown", e => { if(e.key === "Escape"){ closeModal(); closeMediaPop(); closeLoadModal(); } });
+document.addEventListener("click", e => {
+  if(pop.hidden) return;
+  if(!pop.contains(e.target) && !e.target.closest(".info-ic")) closeMediaPop();
+});
+window.addEventListener("scroll", closeMediaPop, true);
+window.addEventListener("resize", closeMediaPop);
+
+/* =========================================================
+   7) 로그인 / 로그아웃 / 저장 / 불러오기
+   ========================================================= */
+const API = "https://sugang-pearl.vercel.app/api";
+let authToken = sessionStorage.getItem("sgToken") || null;
+let authUser  = JSON.parse(sessionStorage.getItem("sgUser") || "null");
+
+// JWT payload에서 role 추출
+function tokenRole(token){
+  try{ return JSON.parse(atob(token.split(".")[1])).role || "student"; }
+  catch{ return "student"; }
+}
+
+// 로그인 상태 UI 반영
+function applyAuthState(){
+  // 만료된 JWT면 자동 로그아웃 처리 (8h 만료 후 같은 탭 재방문 대비)
+  if(authToken){
+    try{
+      const payload = JSON.parse(atob(authToken.split(".")[1]));
+      if(payload.exp && payload.exp * 1000 < Date.now()) throw new Error("expired");
+    } catch{
+      authToken = null; authUser = null;
+      sessionStorage.removeItem("sgToken");
+      sessionStorage.removeItem("sgUser");
+    }
+  }
+
+  const loggedIn  = !!authToken;
+  const role      = (authUser && authUser.role) || "";
+  const isAdmin   = loggedIn && role === "admin";
+  const isTeacher = loggedIn && role === "teacher";
+  const isStaff   = isAdmin || isTeacher;   // admin 패널을 보는 모든 계정(관리자+담임)
+
+  document.body.classList.toggle("admin-mode", isStaff);
+  document.getElementById("userInfo").classList.toggle("on", loggedIn);
+  document.getElementById("loginFormWrap").style.display = loggedIn ? "none" : "";
+  // 학생용 버튼(임시저장/불러오기/제출)은 일반 학생일 때만 표시
+  document.getElementById("saveBtn").style.display   = (loggedIn && !isStaff) ? "" : "none";
+  document.getElementById("loadBtn").style.display   = (loggedIn && !isStaff) ? "" : "none";
+  document.getElementById("submitBtn").style.display = (loggedIn && !isStaff) ? "" : "none";
+
+  if(loggedIn && authUser){
+    let who;
+    if(isAdmin)        who = "관리자";
+    // 담임 학번 "1XX" → 뒤 2자리가 반 번호 (101→1반, 113→13반)
+    else if(isTeacher) who = `${Number(String(authUser.sid).slice(1))}반 담임 · ${authUser.name} 선생님`;
+    else               who = `${authUser.sid} ${authUser.name}`;
+    document.getElementById("userGreeting").innerHTML =
+      `<b>${who}</b>&nbsp;<span class="greeting">접속 중</span>`;
+  }
+  // 담임이면 본인 학번(=담당 학급 코드)을 넘겨 학급별 현황만 보이도록 초기화
+  if(isStaff) initAdminPanel(isTeacher ? authUser.sid : null);
+
+  // 학생이면 2학년 확정 수강내역을 기본값으로 반영 (한 번만)
+  if(loggedIn && !isStaff) applyConfirmedCourses();
+}
+
+// 로그인 요청 공통 함수
+async function doLogin(sid, name, pw, errEl, btnEl){
+  if(!sid || !name){ errEl.textContent = "학번과 이름을 입력하세요."; return; }
+  const orig = btnEl.textContent;
+  btnEl.disabled = true; btnEl.textContent = "로그인 중";
+  errEl.textContent = "";
+  try{
+    const res = await fetch(API + "/auth/login", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ sid, name, pw: pw || undefined })
+    });
+    const data = await res.json();
+    if(!res.ok){ errEl.textContent = data.error || "로그인 실패"; return; }
+    authToken = data.token;
+    authUser  = { sid: data.sid, name: data.name, role: tokenRole(data.token) };
+    sessionStorage.setItem("sgToken", authToken);
+    sessionStorage.setItem("sgUser", JSON.stringify(authUser));
+    applyAuthState();
+    // 로그인 입력창 비우기 (특히 비밀번호가 DOM에 남지 않도록)
+    ["loginSid","loginName","loginPw","mLoginSid","mLoginName","mLoginPw"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.value = "";
+    });
+  } catch{
+    errEl.textContent = "서버 연결 오류";
+  } finally{
+    btnEl.disabled = false; btnEl.textContent = orig;
+  }
+}
+
+// 데스크톱 로그인
+document.getElementById("loginBtn").addEventListener("click", () => {
+  doLogin(
+    document.getElementById("loginSid").value.trim(),
+    document.getElementById("loginName").value.trim(),
+    document.getElementById("loginPw").value,
+    document.getElementById("loginErr"),
+    document.getElementById("loginBtn")
+  );
+});
+["loginSid","loginName","loginPw"].forEach(id =>
+  document.getElementById(id).addEventListener("keydown", e => {
+    if(e.key === "Enter") document.getElementById("loginBtn").click();
+  })
+);
+
+// 로그아웃
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  authToken = null; authUser = null;
+  sessionStorage.removeItem("sgToken");
+  sessionStorage.removeItem("sgUser");
+  location.reload();   // 로그아웃 시 새로고침: 관리자/담임 패널 상태까지 완전 초기화
+});
+
+// 임시저장
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  // 조건 충족 여부 + 선택 내역을 한 번에 수집 (collectState 재사용)
+  const { selections, isComplete } = collectState();
+
+  // 미충족이어도 저장 가능 — 단 경고
+  if(!isComplete){
+    if(!confirm("조건에 부합하지 않습니다. 저장하시겠습니까?")) return;
+  }
+
+  const d = new Date();
+  const dateStr = String(d.getFullYear()).slice(2)
+    + String(d.getMonth()+1).padStart(2,"0")
+    + String(d.getDate()).padStart(2,"0");
+  const timeStr = String(d.getHours()).padStart(2,"0")
+    + ":" + String(d.getMinutes()).padStart(2,"0");
+  const defaultName = `[${dateStr} ${timeStr}] 로드맵`;
+  const rdName = prompt("저장할 로드맵 이름을 입력하세요:", defaultName);
+  if(!rdName) return;
+
+  // 시간:분까지 포함하므로 중복 가능성 거의 없음 → 중복 체크 불필요
+  const finalName = rdName;
+
+  try{
+    const res = await fetch(API + "/roadmaps", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + authToken },
+      body: JSON.stringify({ name: finalName, selections, excluded: collectExcluded(), isComplete })
+    });
+    const data = await res.json();
+    if(!res.ok){ alert(data.error || "저장 실패"); return; }
+    alert(`"${finalName}" 저장 완료!`);
+  } catch{ alert("서버 연결 오류"); }
+});
+
+// ===== 불러오기 모달 제어 함수 및 데이터 연동 =====
+function showLoadModal() {
+  document.getElementById("loadModal").classList.add("on");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLoadModal() {
+  document.getElementById("loadModal").classList.remove("on");
+  document.body.style.overflow = "";
+  document.getElementById("loadModalList").innerHTML = "";
+  document.getElementById("loadModalErr").textContent = "";
+}
+
+// 모달 닫기 이벤트 바인딩
+document.getElementById("loadModalClose").addEventListener("click", closeLoadModal);
+document.getElementById("loadModalBack").addEventListener("click", closeLoadModal);
+
+// 비밀번호 안내 모달
+const pwHelpModal = document.getElementById("pwHelpModal");
+function openPwHelp(){ pwHelpModal.classList.add("on"); document.body.classList.add("modal-open"); }
+function closePwHelp(){ pwHelpModal.classList.remove("on"); document.body.classList.remove("modal-open"); }
+document.getElementById("pwHelpOpen").addEventListener("click", openPwHelp);
+document.getElementById("pwHelpModalClose").addEventListener("click", closePwHelp);
+document.getElementById("pwHelpModalBack").addEventListener("click", closePwHelp);
+
+// 로드맵 목록 서버 요청 및 인터페이스 빌드
+async function fetchAndRenderRoadmaps() {
+  const listContainer = document.getElementById("loadModalList");
+  const errEl = document.getElementById("loadModalErr");
+
+  listContainer.innerHTML = `<div class="rm-empty">불러오는 중...</div>`;
+  errEl.textContent = "";
+
+  try {
+    // 제출본·임시저장본 병렬 조회
+    const [subRes, rdRes] = await Promise.all([
+      fetch(API + "/submit",   { headers: { "Authorization": "Bearer " + authToken } }),
+      fetch(API + "/roadmaps", { headers: { "Authorization": "Bearer " + authToken } }),
+    ]);
+
+    const rdList     = rdRes.ok ? await rdRes.json() : [];
+    const submission = subRes.ok ? await subRes.json() : null;
+
+    listContainer.innerHTML = "";
+
+    // ── 제출본 섹션 (있을 때만 표시) ──
+    if (submission && submission.selections) {
+      const subTitle = document.createElement("div");
+      subTitle.className = "rm-sec-title";
+      subTitle.textContent = "제출본";
+      listContainer.appendChild(subTitle);
+
+      const d = new Date(submission.submittedAt);
+      const dateStr = String(d.getFullYear()).slice(2)
+        + String(d.getMonth() + 1).padStart(2, "0")
+        + String(d.getDate()).padStart(2, "0");
+      const timeStr = String(d.getHours()).padStart(2, "0")
+        + ":" + String(d.getMinutes()).padStart(2, "0");
+      const subName = `[${dateStr} ${timeStr}] 제출된 로드맵`;
+
+      const item = document.createElement("div");
+      item.className = "rm-item";
+
+      const info = document.createElement("div");
+      info.className = "rm-info";
+      info.innerHTML = `<div class="rm-name">${subName}</div>`
+        + `<div class="rm-meta"><span class="rm-badge sub">★ 최종 제출본</span></div>`;
+
+      const actions = document.createElement("div");
+      actions.className = "rm-actions";
+      const loadBtn = document.createElement("button");
+      loadBtn.type = "button";
+      loadBtn.className = "rm-load-btn";
+      loadBtn.textContent = "불러오기";
+      // 제출본은 삭제 버튼 없음 (학생이 임의 삭제 불가)
+      loadBtn.addEventListener("click", () => loadSubmissionFromData(submission, subName, loadBtn));
+      actions.appendChild(loadBtn);
+
+      item.appendChild(info);
+      item.appendChild(actions);
+      listContainer.appendChild(item);
+    }
+
+    // ── 임시저장본 섹션 ──
+    const rdTitle = document.createElement("div");
+    rdTitle.className = "rm-sec-title";
+    rdTitle.textContent = "임시저장본";
+    listContainer.appendChild(rdTitle);
+
+    if (!rdList.length) {
+      const empty = document.createElement("div");
+      empty.className = "rm-empty";
+      empty.textContent = "저장된 로드맵이 없습니다.";
+      listContainer.appendChild(empty);
+    } else {
+      rdList.forEach(rd => {
+        const item = document.createElement("div");
+        item.className = "rm-item";
+
+        const info = document.createElement("div");
+        info.className = "rm-info";
+        const badge = rd.isComplete
+          ? `<span class="rm-badge ok">✓ 조건 충족</span>`
+          : `<span class="rm-badge bad">✗ 미충족</span>`;
+        info.innerHTML = `<div class="rm-name">${rd.name}</div><div class="rm-meta">${badge}</div>`;
+
+        const actions = document.createElement("div");
+        actions.className = "rm-actions";
+
+        const loadBtn = document.createElement("button");
+        loadBtn.type = "button";
+        loadBtn.className = "rm-load-btn";
+        loadBtn.textContent = "불러오기";
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "rm-del-btn";
+        delBtn.textContent = "삭제";
+
+        loadBtn.addEventListener("click", () => loadRoadmapData(rd._id, rd.name, loadBtn, delBtn));
+        delBtn.addEventListener("click", () => deleteRoadmapData(rd._id, rd.name, loadBtn, delBtn));
+
+        actions.appendChild(loadBtn);
+        actions.appendChild(delBtn);
+        item.appendChild(info);
+        item.appendChild(actions);
+        listContainer.appendChild(item);
+      });
+    }
+  } catch {
+    errEl.textContent = "서버 연결 오류가 발생했습니다.";
+    listContainer.innerHTML = "";
+  }
+}
+
+// 선택한 파일 데이터 화면 로드
+// 공통: 저장된 데이터(selections/excluded)를 화면에 복원
+// 임시저장본·제출본 모두 동일한 구조이므로 함께 사용
+function applyRoadmapToScreen(rd) {
+  resetAll();
+  excluded.clear();
+  if (rd.excluded) {
+    Object.entries(rd.excluded).forEach(([semId, names]) => {
+      (names || []).forEach(nm => excluded.add(key(semId, nm)));
+    });
+  }
+  applyExcluded();
+  Object.entries(rd.selections || {}).forEach(([semId, courses]) => {
+    courses.forEach(cName => {
+      const btn = document.querySelector(`.course[data-sem="${semId}"][data-name="${CSS.escape(cName)}"]`);
+      if (btn) { btn.setAttribute("aria-pressed", "true"); selected.add(key(semId, cName)); }
+    });
+  });
+  recompute();
+}
+
+// 임시저장본 불러오기 (서버에서 개별 조회)
+async function loadRoadmapData(id, name, loadBtn, delBtn) {
+  const origText = loadBtn.textContent;
+  loadBtn.textContent = "불러오는 중...";
+  loadBtn.disabled = true;
+  delBtn.disabled = true;
+
+  try {
+    const res = await fetch(API + "/roadmaps/" + id, {
+      headers: { "Authorization": "Bearer " + authToken }
+    });
+    const rd = await res.json();
+    if (!rd.selections) { alert("데이터를 불러올 수 없습니다."); return; }
+
+    applyRoadmapToScreen(rd);
+    alert(`"${name}" 불러오기 완료!`);
+    closeLoadModal();
+  } catch {
+    alert("서버 연결 오류");
+  } finally {
+    loadBtn.textContent = origText;
+    loadBtn.disabled = false;
+    delBtn.disabled = false;
+  }
+}
+
+// 제출본 불러오기 (목록 렌더링 시 이미 받은 데이터를 재사용 — 재요청 없음)
+function loadSubmissionFromData(sub, name, loadBtn) {
+  loadBtn.disabled = true;
+  try {
+    applyRoadmapToScreen(sub);
+    alert(`"${name}" 불러오기 완료!`);
+    closeLoadModal();
+  } catch {
+    alert("불러오기 중 오류가 발생했습니다.");
+    loadBtn.disabled = false;
+  }
+}
+
+// 선택한 파일 서버에서 제거
+async function deleteRoadmapData(id, name, loadBtn, delBtn) {
+  if (!confirm(`"${name}" 로드맵을 완전히 삭제하시겠습니까?`)) return;
+  
+  // 상태 변경 (버튼 비활성화)
+  delBtn.disabled = true;
+  loadBtn.disabled = true;
+
+  try {
+    const res = await fetch(API + "/roadmaps/" + id, {
+      method: "DELETE",
+      headers: { "Authorization": "Bearer " + authToken }
+    });
+    const data = await res.json();
+    if (!res.ok) { alert(data.error || "삭제 실패"); return; }
+    
+    alert(`"${name}" 삭제 완료!`);
+    fetchAndRenderRoadmaps(); // 삭제 성공 시 목록 다시 그리기
+  } catch {
+    alert("서버 연결 오류");
+  } finally {
+    // 삭제 취소나 에러 시 원상 복구
+    delBtn.disabled = false;
+    loadBtn.disabled = false;
+  }
+}
+// 불러오기 실행 단추 트리거
+document.getElementById("loadBtn").addEventListener("click", () => {
+  showLoadModal();
+  fetchAndRenderRoadmaps();
+});
+
+/* =========================================================
+   8) 제출하기 (submissions, 학번당 1건)
+   ========================================================= */
+function collectState(){
+  const semCount = {};
+  SEMESTERS.forEach(s => semCount[s.id] = 0);
+  // catOf가 반환하는 모든 카테고리 키를 미리 0으로 초기화 (누락 시 undefined++ → NaN 방지)
+  const cat = { KME:0, SOC:0, SCI:0, TECH:0, LANG:0, ART:0, ETC:0 };
+  const selections = {};
+  SEMESTERS.forEach(s => selections[s.id] = []);
+  document.querySelectorAll('.course[aria-pressed="true"]').forEach(btn => {
+    semCount[btn.dataset.sem]++;
+    cat[btn.dataset.cat]++;
+    selections[btn.dataset.sem].push(btn.dataset.name);
+  });
+  const isComplete =
+    SEMESTERS.every(s => semCount[s.id] === s.need) &&
+    cat.KME <= 8 && (cat.TECH + cat.LANG) >= 4 && cat.ART >= 2;
+  return { selections, isComplete };
+}
+
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  const { selections, isComplete } = collectState();
+
+  // 조건 미충족이면 제출 불가
+  if(!isComplete){
+    alert("모든 조건(학기별 과목 수, 교과군 필수요건)을 충족해야 제출할 수 있습니다.");
+    return;
+  }
+
+  if(!confirm("본 제출은 가상의 수강신청 연습 및 상담용이며 실제 수강신청은 리로스쿨에서 진행됩니다. 기존 제출은 현재 제출로 덮어씌워집니다. 제출하시겠습니까?")) return;
+
+  try{
+    const res = await fetch(API + "/submit", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + authToken },
+      body: JSON.stringify({ selections, excluded: collectExcluded(), isComplete })
+    });
+    const data = await res.json();
+    if(!res.ok){ alert(data.error || "제출 실패"); return; }
+    alert("제출이 완료되었습니다. (최종 제출본으로 저장됨)");
+  } catch{ alert("서버 연결 오류"); }
+});
+
+/* =========================================================
+   9) 관리자 패널
+   ========================================================= */
+const SEM_TITLE = { s21:"2학년 1학기", s22:"2학년 2학기", s31:"3학년 1학기", s32:"3학년 2학기" };
+let adminInited = false;
+
+function initAdminPanel(teacherCls){
+  if(adminInited){
+    // 이미 초기화된 뒤 다시 호출돼도 담임 잠금 상태는 보장
+    if(teacherCls) applyTeacherLock(teacherCls);
+    return;
+  }
+  adminInited = true;
+
+  const isTeacher = !!teacherCls;
+
+  // 탭 전환
+  document.querySelectorAll(".atab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".atab").forEach(t => t.classList.remove("on"));
+      tab.classList.add("on");
+      const isOv = tab.dataset.tab === "overview";
+      document.getElementById("apOverview").hidden = !isOv;
+      document.getElementById("apClass").hidden = isOv;
+    });
+  });
+
+  // 반 선택 채우기
+  const clsSel = document.getElementById("clsSel");
+  if(isTeacher){
+    // 담임: 본인 반 하나만 + 잠금
+    const o = document.createElement("option");
+    o.value = teacherCls;
+    o.textContent = Number(String(teacherCls).slice(1)) + "반";  // 105 → "5반"
+    clsSel.appendChild(o);
+    clsSel.value = teacherCls;
+    clsSel.disabled = true;
+  } else {
+    // 관리자: 1~13반 전체
+    for(let i = 1; i <= 13; i++){
+      const v = "1" + String(i).padStart(2, "0");   // 101 ~ 113
+      const o = document.createElement("option");
+      o.value = v; o.textContent = i + "반";
+      clsSel.appendChild(o);
+    }
+  }
+
+  // 이벤트
+  document.getElementById("ovSem").addEventListener("change", loadOverview);
+  document.getElementById("ovCsvSem").addEventListener("click", () => downloadCsv(document.getElementById("ovSem").value));
+  clsSel.addEventListener("change", loadClass);
+  document.getElementById("stuModalClose").addEventListener("click", closeStuModal);
+  document.getElementById("stuModalBack").addEventListener("click", closeStuModal);
+
+  if(isTeacher){
+    // 담임: 전체 현황 탭/패널 차단, 학급별 현황만
+    applyTeacherLock(teacherCls);
+    loadClass();
+  } else {
+    // 관리자: 전체 현황 + 학급별 현황 모두 로드
+    loadOverview();
+    loadClass();
+  }
+}
+
+// 담임 계정 화면 잠금: 전체 현황 탭 숨기고 학급별 현황만 활성화
+function applyTeacherLock(teacherCls){
+  const ovTab = document.querySelector('.atab[data-tab="overview"]');
+  if(ovTab) ovTab.style.display = "none";
+  const clsTab = document.querySelector('.atab[data-tab="class"]');
+  document.querySelectorAll(".atab").forEach(t => t.classList.remove("on"));
+  if(clsTab) clsTab.classList.add("on");
+  document.getElementById("apOverview").hidden = true;
+  document.getElementById("apClass").hidden = false;
+  const clsSel = document.getElementById("clsSel");
+  if(clsSel){ clsSel.value = teacherCls; clsSel.disabled = true; }
+}
+
+// 전체 현황
+async function loadOverview(){
+  const sem = document.getElementById("ovSem").value;
+  const stats = document.getElementById("ovStats");
+  const courses = document.getElementById("ovCourses");
+  stats.innerHTML = `<div class="ov-card"><div class="n">…</div></div>`;
+  courses.innerHTML = "";
+  try{
+    const res = await fetch(`${API}/admin/matrix?view=overview&semester=${sem}`, {
+      headers:{ "Authorization":"Bearer " + authToken }
+    });
+    const d = await res.json();
+    if(!res.ok){ stats.innerHTML = `<div class="ov-card no"><div class="t">${d.error||"오류"}</div></div>`; return; }
+    stats.innerHTML =
+      `<div class="ov-card"><div class="n">${d.totalStudents}</div><div class="t">전체</div></div>
+       <div class="ov-card sub"><div class="n">${d.submitted}</div><div class="t">제출</div></div>
+       <div class="ov-card no"><div class="n">${d.notSubmitted}</div><div class="t">미제출</div></div>`;
+    courses.innerHTML = d.courseCounts.map(c =>
+      `<div class="ovc-item ${c.count===0?"zero":""}"><span class="nm">${c.course}</span><span class="cnt">${c.count}</span></div>`
+    ).join("");
+  } catch{ stats.innerHTML = `<div class="ov-card no"><div class="t">서버 연결 오류</div></div>`; }
+}
+
+// CSV 다운로드 (인증 헤더 필요 → blob 처리)
+async function downloadCsv(sem){
+  const btn = document.getElementById("ovCsvSem");
+  
+  try{
+    // 버튼 비활성화 + 로딩 텍스트
+    btn.disabled = true;
+    btn.textContent = "CSV 생성중";
+    
+    const url = `${API}/admin/matrix?download=1` + (sem ? `&semester=${sem}` : "");
+    const res = await fetch(url, { headers:{ "Authorization":"Bearer " + authToken } });
+    
+    if(!res.ok){ 
+      alert("다운로드 실패"); 
+      btn.disabled = false;
+      btn.textContent = "CSV 다운로드";
+      return; 
+    }
+    
+    const blob = await res.blob();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `수강신청_제출현황_${sem || "전체"}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(a.href);
+    
+    // 다운로드 완료 → 버튼 복귀
+    btn.disabled = false;
+    btn.textContent = "CSV 다운로드";
+  } catch{ 
+    alert("서버 연결 오류"); 
+    btn.disabled = false;
+    btn.textContent = "CSV 다운로드";
+  }
+}
+
+// 학급별 현황
+async function loadClass(){
+  const cls = document.getElementById("clsSel").value;
+  const grid = document.getElementById("clsGrid");
+  grid.innerHTML = `<div class="cs-item none"><span class="dot"></span><span class="who"><span class="nm">불러오는 중…</span></span></div>`;
+  try{
+    const res = await fetch(`${API}/admin/matrix?view=class&cls=${cls}`, {
+      headers:{ "Authorization":"Bearer " + authToken }
+    });
+    const d = await res.json();
+    if(!res.ok){ grid.innerHTML = `<div class="cs-item none"><span class="who"><span class="nm">${d.error||"오류"}</span></span></div>`; return; }
+    if(!d.students.length){ grid.innerHTML = `<div class="cs-item none"><span class="who"><span class="nm">학생 명단이 없습니다.</span></span></div>`; return; }
+
+    grid.innerHTML = "";
+    d.students.forEach(s => {
+      const item = document.createElement("div");
+      // 제출 완료(complete)만 클릭해서 내역을 볼 수 있음
+      // draft(임시저장)는 학생이 아직 공개 의사를 밝히지 않은 상태이므로 담임에게 비공개
+      const clickable = s.status === "complete";
+      item.className = `cs-item ${s.status}` + (clickable ? " clickable" : "");
+      item.innerHTML = `<span class="dot"></span><span class="who"><span class="sid">${s.sid}</span><span class="nm">${s.name}</span></span>`;
+      if(clickable) item.addEventListener("click", () => viewStudent(s.sid, s.name));
+      grid.appendChild(item);
+    });
+  } catch{ grid.innerHTML = `<div class="cs-item none"><span class="who"><span class="nm">서버 연결 오류</span></span></div>`; }
+}
+
+// 학생 제출 내역 상세 모달
+async function viewStudent(sid, name){
+  const body = document.getElementById("stuModalBody");
+  document.getElementById("stuModalTitle").textContent = `${sid} ${name} · 제출 내역`;
+  body.innerHTML = "불러오는 중…";
+  document.getElementById("stuModal").hidden = false;
+  lockPageBehindModal();   // mediaModal과 동일한 잠금 패턴 (iOS 스크롤 튐 방지)
+  try{
+    const res = await fetch(`${API}/admin/matrix?view=student&sid=${sid}`, {
+      headers:{ "Authorization":"Bearer " + authToken }
+    });
+    const d = await res.json();
+    if(!res.ok){ body.innerHTML = d.error || "오류"; return; }
+
+    const when = d.submittedAt ? new Date(d.submittedAt).toLocaleString("ko-KR") : "-";
+    let html = `<div class="stu-meta">제출 시각: ${when} · ${d.isComplete ? "✓ 조건 충족" : "✗ 미충족"}</div>`;
+    ["s21","s22","s31","s32"].forEach(sem => {
+      const list = (d.selections && d.selections[sem]) || [];
+      html += `<div class="stu-sem"><h4>${SEM_TITLE[sem]} (${list.length})</h4><div class="courses">` +
+        (list.length ? list.map(c => `<span class="c">${c}</span>`).join("") : `<span style="color:#999;font-size:12px">선택 없음</span>`) +
+        `</div></div>`;
+    });
+    body.innerHTML = html;
+  } catch{ body.innerHTML = "서버 연결 오류"; }
+}
+// 중복 이름 옵션 모달 (Promise 반환: 최종 이름 or null=취소)
+function showDupeModal(name){
+  return new Promise(resolve => {
+    document.getElementById("dupeDesc").textContent =
+      `"${name}" 이름의 로드맵이 이미 있습니다.`;
+    const modal = document.getElementById("dupeModal");
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+
+    function close(val){
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      // 이벤트 정리
+      document.getElementById("dupeOverwrite").onclick = null;
+      document.getElementById("dupeRename").onclick = null;
+      document.getElementById("dupeCancel").onclick = null;
+      document.getElementById("dupeModalBack").onclick = null;
+      resolve(val);
+    }
+
+    document.getElementById("dupeOverwrite").onclick = () => close(name);
+
+    document.getElementById("dupeRename").onclick = () => {
+      modal.hidden = true;
+      document.body.style.overflow = "";
+      // 이름에 (1), (2)... 자동 suffix
+      let newName = name;
+      const m = name.match(/^(.*)\((\d+)\)$/);
+      newName = m ? `${m[1]}(${parseInt(m[2])+1})` : `${name}(1)`;
+      const entered = prompt("새 이름을 입력하세요:", newName);
+      document.getElementById("dupeOverwrite").onclick = null;
+      document.getElementById("dupeRename").onclick = null;
+      document.getElementById("dupeCancel").onclick = null;
+      document.getElementById("dupeModalBack").onclick = null;
+      resolve(entered && entered.trim() ? entered.trim() : null);
+    };
+
+    document.getElementById("dupeCancel").onclick = () => close(null);
+    document.getElementById("dupeModalBack").onclick = () => close(null);
+  });
+}
+
+function closeStuModal(){
+  document.getElementById("stuModal").hidden = true;
+  unlockPageBehindModal();   // viewStudent의 lockPageBehindModal과 짝 맞춤
+}
+
+// 페이지 로드 시 세션 복원
+applyAuthState();
+</script>
+</body>
+</html>
