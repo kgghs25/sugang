@@ -2351,7 +2351,7 @@ function initAdminPanel(teacherCls){
   } else {
     // 관리자: 1~13반 전체
     for(let i = 1; i <= 13; i++){
-      const v = "1" + String(i).padStart(2, "0");   // 101 ~ 113
+      const v = "2" + String(i).padStart(2, "0");   // 101 ~ 113
       const o = document.createElement("option");
       o.value = v; o.textContent = i + "반";
       clsSel.appendChild(o);
