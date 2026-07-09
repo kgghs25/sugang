@@ -6,7 +6,7 @@ const client = new MongoClient(process.env.MONGODB_URI);
 
 const SEM_ORDER = ["s21", "s22", "s31", "s32"];
 const SEM_LABEL = { s21: "2학년 1학기", s22: "2학년 2학기", s31: "3학년 1학기", s32: "3학년 2학기" };
-const TEST_CLASS = "215";  // 2학년 15반 = 테스트용(실제 반은 1~13반뿐), 모든 집계에서 제외
+const TEST_CLASS = "216";  // 2학년 15반 = 테스트용(실제 반은 1~13반뿐), 모든 집계에서 제외
 
 // 학기별 선택과목 전체 목록 (열 순서/0명 과목 표시용)
 const SEM_COURSES = {
